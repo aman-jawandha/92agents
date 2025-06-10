@@ -1,0 +1,41 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Laravel
+/vendor/
+vendor/bin/
+bootstrap/cache/*.php
+bootstrap/compiled.php
+storage/*.key
+storage/logs/*.log
+app/storage/
+public/storage
+public/hot
+public/build
+public_html/storage
+public_html/hot
+.env
+.env.backup
+.env.production
+.env.sail
+.phpunit.result.cache
+/.phpunit.cache
+/database/*.sqlite
+
+# Homestead & Vagrant
+Homestead.yaml
+Homestead.json
+/.vagrant
+
+# Docker
+docker-compose.override.yml
+
+# IDEs & System Files
+.DS_Store
+/.idea
+/.vscode
+/.fleet
+auth.json
+92A.zip

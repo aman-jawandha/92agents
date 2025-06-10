@@ -1,0 +1,17 @@
+RewriteEngine on
+RewriteEngine On
+Redirect /google.html http://www.google.com
+RewriteCond %{REQUEST_URI} !^public
+RewriteRule ^(.*)$ public/$1 [L]
+
+#Add below RewriteRule
+<FilesMatch "^\.env">
+    Order allow,deny
+    Deny from all
+ </FilesMatch>
+
+<IfModule mod_rewrite.c>
+   RewriteEngine On
+   RewriteCond %{REQUEST_URI} !^public
+   RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
