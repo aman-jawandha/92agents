@@ -110,23 +110,48 @@
                                     <label>Choose Pop-in Design</label>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" value="top_right" name="design"
-                                            id="top_right" {{($popin->design == 'top_right') ? 'checked' : ''}}>
+                                            id="top_right" {{ ($popin->design == 'top_right') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="top_right">Top-Right</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" value="right" name="design"
-                                            id="right" {{($popin->design == 'right') ? 'checked' : ''}}>
+                                            id="right" {{ ($popin->design == 'right') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="right">Right</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" value="bottom_right"
-                                            name="design" id="bottom_right" {{($popin->design == 'bottom_right') ? 'checked' : ''}}>
+                                        <input class="form-check-input" type="radio" value="bottom_right" name="design"
+                                            id="bottom_right" {{ ($popin->design == 'bottom_right') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="bottom_right">Bottom-Right</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" value="bottom" name="design"
-                                            id="bottom" {{($popin->design == 'bottom') ? 'checked' : ''}}>
+                                            id="bottom" {{ ($popin->design == 'bottom') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="bottom">Bottom</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="top_left" name="design"
+                                            id="top_left" {{ ($popin->design == 'top_left') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="top_left">Top-Left</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="bottom_left" name="design"
+                                            id="bottom_left" {{ ($popin->design == 'bottom_left') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="bottom_left">Bottom-Left</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="left" name="design"
+                                            id="left" {{ ($popin->design == 'left') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="left">Left</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="top" name="design"
+                                            id="top" {{ ($popin->design == 'top') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="top">Top (Full Width)</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="full_screen" name="design"
+                                            id="full_screen" {{ ($popin->design == 'full_screen') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="full_screen">Full-Screen</label>
                                     </div>
                                 </div>
                                 <div class="col-md-12 text-center">
