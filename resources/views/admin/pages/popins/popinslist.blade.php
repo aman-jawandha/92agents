@@ -48,6 +48,7 @@
                                         <th>Sr.No</th>
                                         <th>For Whom</th>
                                         <th>Title</th>
+                                        <th>Layout</th>
                                         <th>Url</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -65,6 +66,7 @@
                                                 <td>Agent</td>
                                             @endif
                                             <td>{{ $popin->title }}</td>
+                                            <td>{{ $popin->design }}</td>
                                             <td><a href="{{ $popin->url }}">{{ $popin->url }}</a></td>
                                             <td>{{ $popin->status }}</td>
                                             <td>

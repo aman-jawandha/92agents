@@ -99,24 +99,40 @@
                                 <div class="col-md-12">
                                     <label>Choose Pop-in Design</label>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" value="top_right" name="design"
-                                            id="top_right">
+                                        <input class="form-check-input" type="radio" value="top_right" name="design" id="top_right">
                                         <label class="form-check-label" for="top_right">Top-Right</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" value="right" name="design"
-                                            id="right" checked>
+                                        <input class="form-check-input" type="radio" value="right" name="design" id="right" checked>
                                         <label class="form-check-label" for="right">Right</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" value="bottom_right"
-                                            name="design" id="bottom_right">
+                                        <input class="form-check-input" type="radio" value="bottom_right" name="design" id="bottom_right">
                                         <label class="form-check-label" for="bottom_right">Bottom-Right</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" value="bottom" name="design"
-                                            id="bottom">
+                                        <input class="form-check-input" type="radio" value="bottom" name="design" id="bottom">
                                         <label class="form-check-label" for="bottom">Bottom</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="top_left" name="design" id="top_left">
+                                        <label class="form-check-label" for="top_left">Top-Left</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="bottom_left" name="design" id="bottom_left">
+                                        <label class="form-check-label" for="bottom_left">Bottom-Left</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="left" name="design" id="left">
+                                        <label class="form-check-label" for="left">Left</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="top" name="design" id="top">
+                                        <label class="form-check-label" for="top">Top</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="full_screen" name="design" id="full_screen">
+                                        <label class="form-check-label" for="full_screen">Full-Screen</label>
                                     </div>
                                 </div>
                                 <div class="col-md-12 text-center">
