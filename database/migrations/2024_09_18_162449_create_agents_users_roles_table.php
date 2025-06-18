@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('status', ['0', '1'])->default('1')->comment('1 = active, 0= deactive');
             $table->enum('is_deleted', ['0', '1'])->default('0')->comment('0 = no, 1= yes');
             $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->default('0000-00-00 00:00:00');
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 

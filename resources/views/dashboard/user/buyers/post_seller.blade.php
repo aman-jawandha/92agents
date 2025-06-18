@@ -333,8 +333,37 @@
                         let htm = `
                             <div class="border1-bottom">
                                 <div class="funny-boxes acposts">
-                                    <h2 class="title margin-bottom-0"><a target="_blank" href="/profile/buyer/post/details/${value.post_id}">${value.posttitle}</a>
-                                        ${value.when_do_you_want_to_sell?.toLowerCase() == 'now' ? `<span class="badge badge-danger" style="margin: 10px;">Urgent Sell</span>` : ''}</h2>
+                                    <div style="display:flex;align-items:center;justify-content:space-between">
+                                        <div style="width:70%">
+                                        <h2 class="title margin-bottom-0"><a target="_blank" href="/profile/buyer/post/details/${value.post_id}">${value.posttitle}</a>
+                                        ${value.when_do_you_want_to_sell?.toLowerCase() == 'now' ? `<span class="badge badge-danger" style="margin: 10px;">Urgent Buy</span>` : ''}</h2>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button type="button" class="btn btn-default dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-share"></i> Share</button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <p style="margin:2px 5px;">
+                                                        <a class="dropdown-item" style="color:black" href="#" onclick="copyToClipboard('${window.location.origin}/profile/buyer/post/details/${value.post_id}')">
+                                                            <i class="fa fa-copy"></i> &nbsp;Copy Link
+                                                        </a>
+                                                    </p>
+                                                    <p style="margin:2px 5px;">
+                                                        <a class="dropdown-item" style="color:black" href="https://wa.me/?text=${encodeURIComponent(window.location.origin + '/profile/buyer/post/details/' + value.post_id)}" target="_blank">
+                                                            <i class="fa fa-whatsapp"></i> &nbsp;Whatsapp
+                                                        </a>
+                                                    </p>
+                                                    <p style="margin:2px 5px;">
+                                                        <a class="dropdown-item" style="color:black" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin + '/profile/buyer/post/details/' + value.post_id)}" target="_blank">
+                                                            <i class="fa fa-linkedin"></i> &nbsp;LinkedIn
+                                                        </a>
+                                                    </p>
+                                                    <p style="margin:2px 5px;">
+                                                        <a class="dropdown-item" style="color:black" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin + '/profile/buyer/post/details/' + value.post_id)}" target="_blank">
+                                                            <i class="fa fa-facebook"></i> &nbsp;Facebook
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <div class="funny-boxes-img">
                                         <ul class="list-inline margin-bottom-5">
                                             <li><i class="fa-fw fa fa-map-marker"></i> ${location_var || 'No location provided yet!'}</li>
@@ -596,5 +625,10 @@
             });
         });
         /* edit edit-prasnol-bio*/
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => alert("Link copied to clipboard!"))
+        .catch(err => alert("Failed to copy link."));
+}
     </script>
 @stop

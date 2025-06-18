@@ -5,11 +5,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth;
 use App\Http\Controllers\Administrator;
 use Illuminate\Support\Facades\Artisan;
+// use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
+
 
 
 // Route::get('/agentadmin', 'Auth\AdminLoginController@getAdminLogin');
 // Route::post('agentadmin/login', ['as' => 'admin.login', 'uses' => 'Auth\AdminLoginController@adminAuth']);
 // Route::get('/adminlogout', 'Auth\AdminLoginController@logout');
+Route::get('/force-logout', function () {
+    Auth::logout();
+    Session::flush();
+});
 
 Route::prefix('agentadmin')->group(function () {
 
@@ -73,6 +81,8 @@ Route::prefix('agentadmin')->group(function () {
             Route::post('/selectagentbyadmin', 'selectagentbyadmin')->name('admin.selectagentbyadmin');
             Route::get('/posts', 'Post')->name('admin.getpost');
             Route::post('/deletepost', 'deletePost')->name('admin.deletepost');
+            Route::get('/customer-feedbacks', 'feedbacks')->name('feedbacks');
+            Route::delete('/delete-feedback/{id}', 'delete_feedback')->name('delete-feedback');
         });
 
         Route::controller(Administrator\ProfileController::class)->group(function () {

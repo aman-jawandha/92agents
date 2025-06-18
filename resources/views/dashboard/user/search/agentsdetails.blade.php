@@ -375,11 +375,48 @@
                 </div>
 
                 <div class="col-md-3 sm-margin-bottom-20 grid cs-style-5">
-                    <div class="bookmark-user margin-bottom-20">
+                    <div class="bookmark-user margin-bottom-10">
                         <span class="tooltips cursor btn-block btn btn-default sitegreen"
                             onclick="user_add_bookmark_list();" data-original-title="Bookmark">
                             <i class="fa fa-star-o bookmarkquestion-icon"></i> Bookmark
                         </span>
+                    </div>
+                    <a type="button" href="{{route('get-agent-rating',$agents->id)}}" class="btn-block btn btn-default margin-bottom-10">Rating</a>
+                    @php
+                        $shareUrl = url('/search/agents/details/' . $agents->id);
+                    @endphp
+
+                    <div class="dropdown">
+                        <button type="button" class="btn-block btn btn-default dropdown-toggle" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-share bookmarkquestion-icon"></i> Share
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                            <p style="margin:2px 5px;">
+                                <a class="dropdown-item" style="color:black" href="#"
+                                    onclick="copyToClipboard('{{ $shareUrl }}')">
+                                    <i class="fa fa-copy"></i> &nbsp;Copy Link
+                                </a>
+                            </p>
+                            <p style="margin:2px 5px;">
+                                <a class="dropdown-item" style="color:black"
+                                    href="https://wa.me/?text={{ urlencode($shareUrl) }}" target="_blank">
+                                    <i class="fa fa-whatsapp"></i> &nbsp;Whatsapp
+                                </a>
+                            </p>
+                            <p style="margin:2px 5px;">
+                                <a class="dropdown-item" style="color:black"
+                                    href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode($shareUrl) }}" target="_blank">
+                                    <i class="fa fa-linkedin"></i> &nbsp;LinkedIn
+                                </a>
+                            </p>
+                            <p style="margin:2px 5px;">
+                                <a class="dropdown-item" style="color:black"
+                                    href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($shareUrl) }}" target="_blank">
+                                    <i class="fa fa-facebook"></i> &nbsp;Facebook
+                                </a>
+                            </p>
+                        </div>
                     </div>
 
                     <div class="margin-bottom-20 notebutton"></div>
@@ -394,7 +431,8 @@
                             <hr>
                             @foreach ($post as $postdata)
                                 <select>
-                                    <option class="clickpostidchange" value="{{ $postdata->post_id }}">{{ $postdata->posttitle }}</option>
+                                    <option class="clickpostidchange" value="{{ $postdata->post_id }}">
+                                        {{ $postdata->posttitle }}</option>
                                 </select>
                             @endforeach
                             <h3 class="black">POST: <br>{!! ucfirst($post[0]->posttitle) !!}</h3>
@@ -590,7 +628,8 @@
 
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="myModalLabel4">{{ ucfirst($agents->name) }} Asked Question for Your Post</h4>
+                        <h4 class="modal-title" id="myModalLabel4">{{ ucfirst($agents->name) }} Asked Question for Your
+                            Post</h4>
                     </div>
 
                     <div class="modal-body padding-0">
@@ -2678,5 +2717,11 @@
             str = str.replace("_5", ".5");
             return str;
         }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text)
+            .then(() => alert('Link copied to clipboard!'))
+            .catch(err => alert('Failed to copy link'));
+    }
     </script>
 @stop
