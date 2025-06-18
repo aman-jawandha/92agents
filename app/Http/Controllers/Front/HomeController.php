@@ -121,6 +121,15 @@ class HomeController extends Controller
         return view('front.publicPage.contact');
     }
 
+    public function feedback(Request $request)
+    {
+        $feedback = DB::table('feedbacks')->insert([
+            'email' => $request->email,
+            'message' => $request->message,
+        ]);
+        return redirect()->back()->with('success','Feedback Submitted Successfully.');
+    }
+
     /* For send contact */
     public function contactSend(Request $request)
     {

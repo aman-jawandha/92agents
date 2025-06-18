@@ -470,6 +470,7 @@
                             </div>
                         </div>
                     @else
+                    @if($post->agents_user_id == auth()->user()->id)
                         <div class="card-wrap box-shadow-profile margin-bottom-40">
                             <div class="panel-profile">
                                 <div class="panel-heading overflow-h air-card">
@@ -494,8 +495,9 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                     @endif
-
+                    @if($post->agents_user_id == auth()->user()->id)
                     <div class="box-shadow-profile homedata homedatanotes margin-bottom-40">
                         <div class="panel-profile">
                             <div class="panel-heading overflow-h air-card">
@@ -526,6 +528,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
 
                     <div class="card-wrap box-shadow-profile margin-bottom-40">
                         <div class="panel-profile">

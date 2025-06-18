@@ -43,6 +43,45 @@
             overflow-y: scroll;
         }
     }
+.feedback-float {
+    position: fixed;
+    right: 15px;
+    top: 73%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    background-color: #74c52c;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: sans-serif;
+    animation: popBounce 1.9s ease-in-out infinite;
+  }
+
+  @keyframes popBounce {
+    0%, 100% {
+      transform: translateY(-50%) scale(1);
+    }
+    50% {
+      transform: translateY(-50%) scale(1.2);
+    }
+  }
+
+  .feedback-alert {
+    position: fixed;
+    right: 15px;
+    top: 20%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    background-color: #74c52c;
+    color: white;
+    padding: 10px;
+  }
 </style>
 
 @if (!empty($topmenu))
@@ -549,13 +588,40 @@
         </div>
     </div>
     <!-- End modal window -->
-
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-slideout modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="display: flex;justify-content:space-between;align-items:center">
+        <h5 style="width:90%" class="modal-title" id="feedbackModalLabel">Feedback</h5>
+        <button type="button" onclick="$('#feedbackModal').modal('hide')" class="btn-close" data-bs-dismiss="modal"><b>X</b></button>
+      </div>
+      <form action="{{ route('feedback') }}" method="POST">
+        @csrf
+        <div class="modal-body">
+            <input type="email" class="form-control" name="email" maxlength="50" placeholder="Your Email"><br>
+          <textarea name="message" class="form-control" rows="4" required maxlength="1000" placeholder="Write your thoughts..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success btn-sm">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
     <!-- model end -->
 
 </section>
 <!-- /Modal -->
 
 <!-- Scroll To Top -->
+<a href="#feedbackModal" onclick="$('#feedbackModal').modal('show')" data-bs-toggle="modal" class="feedback-float">
+   <i class="fa fa-comment"></i> Feedback?
+</a>
+@if (session('success'))
+    <div class="feedback-alert">
+       {{ session('success') }} &nbsp;&nbsp;&nbsp;&nbsp;<span style="cursor:pointer" onclick="$('.feedback-alert').remove()"><b>X</b></span>
+    </div>
+@endif
 <a href="#" class="scrollup"><i class="fa fa-angle-up"></i></a>
 <footer id="footer">
     <!-- Footer Top -->

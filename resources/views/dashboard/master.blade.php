@@ -32,7 +32,7 @@
     // Call immediately on load
     fetchPopin();
 
-    // Repeat every 30 seconds
+    // Repeat every 5 minutes
     setInterval(fetchPopin, 5 * 60 * 1000);
 
     $(document).on("click", ".close_popin", function() {

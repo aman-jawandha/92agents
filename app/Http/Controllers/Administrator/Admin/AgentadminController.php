@@ -321,4 +321,14 @@ class AgentadminController extends Controller
 
 		return redirect(url()->previous())->with($view);
 	}
+
+	public function feedbacks(){
+		$feedbacks = DB::table('feedbacks')->get();
+		return view('admin.feedbacks',compact('feedbacks'));
+	}
+
+	public function delete_feedback($id){
+		$feedback = DB::table('feedbacks')->where('id',$id)->delete();
+		return redirect()->back()->with('success','Feedback deleted successfully');
+	}
 }

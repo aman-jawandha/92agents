@@ -7,6 +7,7 @@ use App\Helper\Resp;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Rating;
+use App\Models\AgentRating;
 use App\Models\Userdetails;
 use App\Events\eventTrigger;
 use App\Models\Notification;
@@ -374,5 +375,32 @@ class RatingController extends Controller
     {
         $review = DB::table('agents_rating')->where(['rating_item_parent_id' => $post_id, 'rating_item_id' => Auth::user()->id])->first();
         return response()->json($review);
+    }
+
+    public function store_agent_rating(Request $request){
+        $rating = AgentRating::updateOrCreate(
+        ['rating_by' => auth()->user()->id, 'rating_for' => $request->agent_id],
+        [
+            'rating_by_role' => auth()->user()->agents_users_role_id, 
+            'rating' => $request->rating, 
+            'review' => $request->review
+        ]
+        );
+        return redirect()->back()->with('success','Rating added successfully.');
+    }
+
+    public function get_agent_rating($id){
+        $rating = AgentRating::where('rating_by',auth()->user()->id)->where('rating_for',$id)->first();
+        $ratings = AgentRating::where('rating_for',$id)->orderBy('id', 'desc')->paginate(12);
+        $agent = DB::table('agents_users_details')->where('details_id',$id)->first();
+        $ratingStats = AgentRating::where('rating_for', $id)
+        ->selectRaw('COUNT(*) as total, AVG(rating) as average')
+        ->first();
+        return view('dashboard.user.search.agent_rating',compact('ratings','agent','rating','ratingStats'));
+    }
+
+    public function delete_agent_rating($agent_id){
+        $rating = AgentRating::where('rating_by',auth()->user()->id)->where('rating_for',$agent_id)->delete();
+        return redirect()->back()->with('success','Rating deleted successfully.');
     }
 }

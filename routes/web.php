@@ -41,6 +41,7 @@ Route::controller(Front\HomeController::class)->group(function () {
     Route::get('/sellers', 'sellers');
     Route::get('/buyers', 'buyers');
     Route::get('/contactus', 'contact');
+    Route::post('/feedback', 'feedback')->name('feedback');
     Route::post('contactSend', 'contactSend')->name('contactSend');
 
     /*Front View Of Blog*/
@@ -238,14 +239,14 @@ Route::middleware(['auth', 'lang', 'sTime', 'check-user-activation'])->group(fun
             /* Common Routes */
             Route::get('/seller/posts', 'index');
             Route::get('/seller/compareposts', 'ComparePost');
-            Route::get('/seller/post/details/{post_id}', 'PostDetailsForBuyer');
+            Route::get('/seller/post/details/{post_id}', 'PostDetailsForBuyer')->name('seller-post-detail');
             Route::get('/seller/post/details/{post_id}/{compare}', 'PostDetailsForBuyer');
             Route::get('/seller/post/details/agents/get/few/{post_id}/{userid}/{roleid}', 'PostDetailsAgentsGetForBuyerlimitfive');
             Route::get('/seller/post/details/agents/get/{limit}/{post_id}/{userid}/{roleid}', 'PostDetailsAgentsGetForBuyer');
 
             Route::get('/buyer/posts', 'index');
             Route::get('/buyer/compareposts', 'ComparePost');
-            Route::get('/buyer/post/details/{post_id}', 'PostDetailsForBuyer');
+            Route::get('/buyer/post/details/{post_id}', 'PostDetailsForBuyer')->name('buyer-post-detail');;
             Route::get('/buyer/post/details/{post_id}/{compare}', 'PostDetailsForBuyer');
             Route::get('/buyer/post/details/agents/get/few/{post_id}/{userid}/{roleid}', 'PostDetailsAgentsGetForBuyerlimitfive');
             Route::get('/buyer/post/details/agents/get/{limit}/{post_id}/{userid}/{roleid}', 'PostDetailsAgentsGetForBuyer');
@@ -412,6 +413,10 @@ Route::middleware(['auth', 'lang', 'sTime', 'check-user-activation'])->group(fun
 
         /* Test */
         Route::get('/reviewofpost/{post_id}', 'reviewofpost');
+
+        Route::get('agent-rating/{id}', 'get_agent_rating')->name('get-agent-rating');
+        Route::post('store-agent-rating', 'store_agent_rating')->name('store-agent-rating');
+        Route::get('delete-agent-rating/{id}', 'delete_agent_rating')->name('delete-agent-rating');
     });
 
 

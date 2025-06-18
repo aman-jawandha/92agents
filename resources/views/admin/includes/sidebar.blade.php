@@ -330,18 +330,29 @@
             <ul class="treeview-menu">
            <li><a href="{{route('admin.conversation')}}"><i class="fa fa-comments-o" aria-hidden="true"></i> Conversations List</a></li>
             </ul>
-          </li>
-          <li class="treeview">
-				<a href="#">
-					<i class="fa fa-bullhorn"></i> <span>Pop-ins</span>
-					<span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-				</a>
-				<ul class="treeview-menu">
-					<li><a href="{{route('admin.popins')}}"><i class="fa fa-bullhorn"></i>Pop-ins List</a></li>
-				</ul>
-			</li>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-bullhorn"></i> <span>Pop-ins</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{route('admin.popins')}}"><i class="fa fa-bullhorn"></i>Pop-ins List</a></li>
+          </ul>
+			  </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-comment"></i> <span>Feedbacks</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{route('feedbacks')}}"><i class="fa fa-comment"></i>Feedbacks List</a></li>
+          </ul>
+			  </li>
       </ul>
     </section>
   </aside>
