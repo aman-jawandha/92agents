@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Userdetails;
 use App\Models\Post;
+use App\Models\Popin;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -47,11 +48,38 @@ class BlogController extends Controller
 
         $data['added_by'] = $id;
         $data['status'] = 1;
+        $blog_id = DB::table('agents_blog')->insertGetId($data);
 
+        $url = url('/blogs') .'/'. $blog_id .'/'. $request->title;
+        $bg_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+        $btn_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
 
-        $dd = DB::table('agents_blog')->insert($data);
-        // dd( $data);
+        $user_plan = DB::table('user_plans')->where('user_id',auth()->id())->first();
 
+        if($user_plan && $user_plan->start_date <= date('Y-m-d') && $user_plan->end_date >= date('Y-m-d')){
+        $designs = explode(',',$user_plan->designs);
+        $user_popins = Popin::where('agent_id',auth()->id())->where('status','Active')->count();
+        if($user_plan->no_of_popins > $user_popins){
+            $status = 'Active';
+        }else{
+            $status = 'Inactive';
+        }
+        if($blog_id){
+            $popin = Popin::create([
+            'for_whom' => 'All',
+            'title' => 'Explore Blog',
+            'heading' => $request->title,
+            'description' => $request->description,
+            'url' => $url,
+            'bg_color' => $bg_color,
+            'btn_color' => $btn_color,
+            'design' => $designs[array_rand($designs)],
+            'status' => $status,
+            'agent_id' => auth()->id(),
+            'blog_id' => $blog_id,
+        ]);
+        }
+    }
         $category = DB::table('agents_category')->select('*')->get();
         $view['user'] = $user = Auth::user();
         $view['userdetails'] = $userdetails = Userdetails::find($user->id);
@@ -115,6 +143,12 @@ class BlogController extends Controller
 
         $result = DB::table('agents_blog')->where('id', '=', $id)->update($data);
         if ($result) {
+            $url = url('/blogs') .'/'. $id .'/'. $request->title;
+                $popin = Popin::where('blog_id',$id)->where('agent_id',auth()->id())->update([
+                'heading' => $request->title,
+                'description' => $request->description,
+                'url' => $url,
+            ]);
             echo 1;
         } else {
             echo 0;

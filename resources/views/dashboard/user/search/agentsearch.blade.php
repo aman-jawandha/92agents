@@ -233,6 +233,7 @@
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 
     <script type="text/javascript">
+    let ratingsSummary = @json($ratings_summary);
         $('#state').on('change', function() {
             $('#city').children('option:not(:first)').remove();
             
@@ -456,10 +457,11 @@
                     $.each(result.result, function(key, value) {
                         agents_data[value.id] = value;
                         var date = timeDifference(new Date(), new Date(Date.fromISO(value.created_at)));
+                        let rating = ratingsSummary[value.id] ?? { total: 0, average: 0 };
                         var htmll =
                             `<div class="col-md-4" style="padding:15px" id="agents_list_data_${value.id}">
 									<div class="funny-boxes acpost" onclick="redarecturl('{{ URL('/') }}/search/agents/details/${value.id}')">`;
-
+                        htmll += `<p><strong>Total Ratings:</strong> ${rating.total} | <strong>Average Rating:</strong> ${rating.average}</p>`;
                         if (value.photo) {
                             htmll +=
                                 `<img class="img-circle header-circle-img1 img-margin" width="80" height="80" src="{{ URL::asset('assets/img/profile/') }}/${value.photo}" alt="">`;

@@ -69,7 +69,7 @@
       </div>
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
-    		<li class="active"> <a href="{{route('admin.dashboard')}}"><i class="fa fa-dashboard text-aqua"></i> <span>Dashboard</span></a></li>
+    		<li class="active"> <a href="{{route('admin.dashboard')}}"><i class="fa fa-home text-aqua"></i> <span>Dashboard</span></a></li>
         @if($agentread == 1 OR $bsread == 1)
           <li class="treeview">
             <a href="#">
@@ -227,8 +227,7 @@
             </ul>
           </li>
           @endif
-
-          <li class="treeview">
+          {{-- <li class="treeview">
             <a href="#">
               <i class="fa fa-file"></i> <span>Package</span>
               <span class="pull-right-container">
@@ -242,12 +241,10 @@
            <li><a href="{{route('admin.adrequests')}}"><i class="fa fa-list-ol"></i> Ad Requests</a></li>
 
             </ul>
-          </li>
-
-
+          </li> --}}
           <li class="treeview">
             <a href="#">
-              <i class="ion ion-android-pin"></i> <span>Blog</span>
+              <i class="fa fa-tags"></i> <span>Blog</span>
               <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
@@ -311,7 +308,7 @@
           @endif
 			<li class="treeview">
 				<a href="#">
-					<i class="ion ion-android-pin"></i> <span>Notification</span>
+					<i class="fa fa-bell"></i> <span>Notification</span>
 					<span class="pull-right-container">
 						<i class="fa fa-angle-left pull-right"></i>
 					</span>
@@ -339,7 +336,19 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{route('admin.popins')}}"><i class="fa fa-bullhorn"></i>Pop-ins List</a></li>
+            <li><a href="{{route('admin.popins')}}"><i class="fa fa-list-ol"></i>Pop-ins List</a></li>
+          </ul>
+			  </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-briefcase"></i> <span>Plans</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{route('plans-index')}}"><i class="fa fa-list-ol"></i>Plans List</a></li>
+            <li><a href="{{route('payments-index')}}"><i class="fa fa-list-ol"></i>Payments List</a></li>
           </ul>
 			  </li>
         <li class="treeview">
@@ -350,7 +359,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{route('feedbacks')}}"><i class="fa fa-comment"></i>Feedbacks List</a></li>
+            <li><a href="{{route('feedbacks')}}"><i class="fa fa-list-ol"></i>Feedbacks List</a></li>
           </ul>
 			  </li>
       </ul>

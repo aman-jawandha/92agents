@@ -684,7 +684,7 @@
             });
         });
         /* edit edit-prasnol-bio*/
-        function copyToClipboard(text) {
+function copyToClipboard(text) {
     navigator.clipboard.writeText(text)
         .then(() => alert("Link copied to clipboard!"))
         .catch(err => alert("Failed to copy link."));

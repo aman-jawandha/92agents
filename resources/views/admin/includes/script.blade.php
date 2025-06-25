@@ -132,5 +132,20 @@
             .replace("#mm#", mm).replace("#m#", m).replace("#ss#", ss).replace("#s#", s).replace("#ampm#", ampm)
             .replace("#AMPM#", AMPM);
     };
+    function viewPopin(id) {
+        $.ajax({
+            url: "{{ route('view-popin') }}",
+            type: "GET",
+            data:{
+                popin_id:id,
+            },
+            success: function(html) {
+                $('#show_popin').html(html);
+            }
+        });
+    }
+    $(document).on("click", ".close_popin", function() {
+        $('#show_popin').html('');
+    });
 </script>
 @yield('scripts')

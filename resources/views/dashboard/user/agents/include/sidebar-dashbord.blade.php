@@ -44,15 +44,9 @@
 		<li class="list-group-item1 border1-bottom <?php if(@$activemenu=='Questions'): ?> active <?php endif; ?>">
 			<a id="AgentsQUESTIONSture" href="{{url('/profile/agent/questions')}}" ><i class="fa fa-question-circle"></i> Questions</a>
 		</li>
-		@if($user->agents_users_role_id==4)
+		{{-- @if($user->agents_users_role_id==4)
 		<li class="list-group-item1 border1-bottom <?php if(@$activemenu=='Advertise'): ?> active <?php endif; ?>">
 			<a id="AgentsQUESTIONSture" href="{{url('/buyer/advertisement')}}" ><i class="fa fa-question-circle"></i> Advertise</a>
-		</li>
-		@endif
-
-		{{-- @if($user->agents_users_role_id==4)
-		<li class="list-group-item1 border1-bottom {{ @$activemenu }} {{ (@$activemenu==Route("pending_invoices_page")) ? 'active' : '' }}">
-			<a id="AgentsQUESTIONSture" href="{{ Route('pending_invoices_page') }}" ><i class="fa fa-question-circle"></i> Pending Invoices</a>
 		</li>
 		@endif --}}
 	</ul>

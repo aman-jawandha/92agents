@@ -74,49 +74,59 @@ class PopinController extends Controller
         return redirect()->back()->with('success','Popin deleted successfully');
     }
 
-   public function show_popin(Request $request)
-{
-    $userRoleId = auth()->user()->agents_users_role_id;
+    public function show_popin(Request $request)
+    {
+        $userRoleId = auth()->user()->agents_users_role_id;
 
-    $previousTime = session('previous_popin_time') 
-        ? Carbon::parse(session('previous_popin_time')) 
-        : null;
+        $previousTime = session('previous_popin_time') 
+            ? Carbon::parse(session('previous_popin_time')) 
+            : null;
 
-    if (!$previousTime || now()->greaterThanOrEqualTo($previousTime->addMinutes(10))) {
+        if (!$previousTime || now()->greaterThanOrEqualTo($previousTime->addMinutes(10))) {
 
-        if (session('previous_popin_id')) {
-            // Get the next popin with id < previous one (DESC order)
-            $popin = Popin::where('status', 'Active')
-                ->where('for_whom', $userRoleId)
-                ->where('id', '<', session('previous_popin_id'))
-                ->orderBy('id', 'desc')
-                ->first();
+            if (session('previous_popin_id')) {
+                $popin = Popin::where(function ($q) {
+                        $q->where('status', 'Active')->orWhere('status', 'Most Liked');
+                    })
+                    ->whereIn('for_whom', [$userRoleId, 'All'])
+                    ->where('id', '<', session('previous_popin_id'))
+                    ->orderBy('id', 'desc')
+                    ->first();
 
-            // If none found (we're at the oldest), loop back to latest
-            if (!$popin) {
-                $popin = Popin::where('status', 'Active')
-                    ->where('for_whom', $userRoleId)
+                // If none found, reset to latest (loop back)
+                if (!$popin) {
+                    $popin = Popin::where(function ($q) {
+                            $q->where('status', 'Active')->orWhere('status', 'Most Liked');
+                        })
+                        ->whereIn('for_whom', [$userRoleId, 'All'])
+                        ->orderBy('id', 'desc')
+                        ->first();
+                }
+            } else {
+                // First time: show latest
+                $popin = Popin::where(function ($q) {
+                        $q->where('status', 'Active')->orWhere('status', 'Most Liked');
+                    })
+                    ->whereIn('for_whom', [$userRoleId, 'All'])
                     ->orderBy('id', 'desc')
                     ->first();
             }
-        } else {
-            // First time: show latest
-            $popin = Popin::where('status', 'Active')
-                ->where('for_whom', $userRoleId)
-                ->orderBy('id', 'desc')
-                ->first();
+
+            if ($popin) {
+                session([
+                    'previous_popin_id' => $popin->id,
+                    'previous_popin_time' => now(),
+                ]);
+                return view('popins', compact('popin'))->render();
+            }
         }
 
-        if ($popin) {
-            session([
-                'previous_popin_id' => $popin->id,
-                'previous_popin_time' => now(),
-            ]);
-            return view('popins', compact('popin'))->render();
-        }
+        return response()->json(['html' => '']);
     }
 
-    return response()->json(['html' => '']);
+public function view_popin(Request $req)
+{
+    $popin = Popin::where('id', $req->popin_id)->first();
+    return view('popins', compact('popin'))->render();
 }
-
 }

@@ -79,6 +79,7 @@
                             <strong> | Average Rating:</strong> {{ number_format($ratingStats->average, 1) }} / 5
                         </div>
                     </div>
+                    @if($agent->details_id != auth()->id())
                             <label>Add Review</label>
                         <textarea name="review" class="form-control" rows="7" maxlength="1000" placeholder="Write Something">{{$rating->review ?? ''}}</textarea>
                         <button type="submit" class="btn-u margin-top-10">Save</button>
@@ -87,15 +88,13 @@
                             Delete Rating
                         </a>
                         @endif
-                </form>
-                </div>
+                        @endif
                 </div>
             </div>
             <div class="row">
                 <h1 style="margin:20px 0px 10px 5px">Ratings & Reviews</h1>
                 @if($ratings->count() > 0)
                 @foreach ($ratings as $rating)
-                @if($rating->rating_by != auth()->user()->id)
                     <div class="col-md-3" style="padding:5px">
                     <div class="rating_block" style="background-color: white;padding:10px;border:1px solid green; border-radius:10px">
                         <?php 
@@ -139,7 +138,6 @@
                         </div>
                     </div>
                 </div>
-                @endif
                 @endforeach
                 @else
                 <p style="margin-left: 8px">No rating found for the agent!</p>

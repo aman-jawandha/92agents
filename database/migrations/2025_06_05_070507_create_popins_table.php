@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('popins', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('agent_id')->nullable();
+            $table->unsignedBigInteger('blog_id')->nullable();
             $table->string('for_whom')->nullable();
             $table->string('title')->nullable();
             $table->string('heading')->nullable();

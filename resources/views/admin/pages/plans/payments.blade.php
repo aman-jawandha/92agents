@@ -15,13 +15,13 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Pop-ins
-                <small>Pop-ins list</small>
+                Payments
+                <small>Payments list</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="{{ route('admin.popins') }}">Pop-ins</a></li>
-                <li class="active">Pop-ins list</li>
+                <li><a href="{{ route('payments-index') }}">Payments</a></li>
+                <li class="active">Payments list</li>
             </ol>
         </section>
 
@@ -30,12 +30,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
-                        <div class="box-header text-right">
-                            <h3 class="box-title"><a class="btn btn-success" href="{{ route('admin.add-popin') }}">
-                                    <i class="fa fa-plus fa-xs"></i> Add Pop-in</a>
-                            </h3>
-                        </div>
-                        @if (session('success'))
+                         @if (session('success'))
                             <div class="alert alert-success">
                                 {{ session('success') }}
                             </div>
@@ -46,51 +41,30 @@
                                 <thead>
                                     <tr>
                                         <th>Sr.No</th>
-                                        <th>For Whom</th>
-                                        <th>Added By</th>
-                                        <th>Title</th>
-                                        <th>Layout</th>
-                                        <th>Url</th>
-                                        <th>Status</th>
+                                        <th>Payment Id</th>
+                                        <th>Amount</th>
+                                        <th>Payment Status</th>
+                                        <th>Payment By</th>
+                                        <th>Payment For</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($popins as $key => $popin)
+                                    @foreach ($payments as $key => $payment)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            @if ($popin->for_whom == '3')
-                                                <td>Seller</td>
-                                            @elseif($popin->for_whom == '2')
-                                                <td>Buyer</td>
-                                            @elseif($popin->for_whom == '4')
-                                                <td>Agent</td>
-                                            @elseif($popin->for_whom == 'All')
-                                            <td>All</td>
-                                            @endif
-                                            <td>{{ $popin->get_user->name ?? 'N/A' }}</td>
-                                            <td>{{ $popin->title }}</td>
-                                            <td>{{ $popin->design }}</td>
-                                            <td><a href="{{ $popin->url }}">{{ $popin->url }}</a></td>
+                                            <td>{{ $payment->payment_id }}</td>
+                                            <td>${{ $payment->amount }}</td>
+                                            <td>{{ $payment->payment_status}}</td>
+                                            <td>{{ $payment->payment_by}}</td>
+                                            <td>{{ $payment->payment_for}}</td>
                                             <td>
-                                                @if($popin->status == 'Active')
-                                                <span class="badge" style="background-color: #00a65a;width:72px">{{ $popin->status }}</span>
-                                                @elseif($popin->status == 'Inactive')
-                                                <span class="badge" style="background-color: #dd4b39;width:72px">{{ $popin->status }}</span>
-                                                @elseif($popin->status == 'Most Liked')
-                                                <span class="badge" style="background-color: #e39e21;width:72px">{{ $popin->status }}</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <button type="button" onclick="viewPopin('{{$popin->id}}')" class="btn btn-success btn-sm" style="color:white !important;"><i class="fa fa-eye"></i></button>
-                                                <a href="{{ route('admin.edit-popin', $popin->id) }}"
-                                                    class="btn btn-success btn-sm"><i class="fa fa-edit"></i></a>
                                                 <form id="delete-form" method="POST" style="display:none;">
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
                                                 <button class="btn btn-danger btn-sm"
-                                                    onclick="confirmDelete('{{ route('admin.delete-popin', $popin->id) }}', 'Pop-in')"><i
+                                                    onclick="confirmDelete('{{ route('delete-payment-record', $payment->id) }}', 'Payment Record')"><i
                                                         class="fa fa-trash"></i></button>
                                             </td>
                                         </tr>

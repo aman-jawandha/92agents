@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Popin;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
@@ -99,7 +100,27 @@ class EmployeeController extends Controller
     public function blogstore(Request $request)
     {
         $data = $request->except('_token', 'files');
-        DB::table('agents_blog')->insert($data);
+        $data['status'] = 1;
+        $id = DB::table('agents_blog')->insertGetId($data);
+        $url = url('/blogs') .'/'. $id .'/'. $request->title;
+        $bg_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+        $btn_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+        $designs = ['top','bottom','left','right','full_screen','top_right','bottom_right','top_left','bottom_left'];
+        if($id){
+            $popin = Popin::create([
+            'for_whom' => 'All',
+            'title' => 'Explore Blog',
+            'heading' => $request->title,
+            'description' => $request->description,
+            'url' => $url,
+            'bg_color' => $bg_color,
+            'btn_color' => $btn_color,
+            'design' => $designs[array_rand($designs)],
+            'status' => 'Active',
+            'blog_id' => $id,
+            'agent_id' => auth()->id(),
+        ]);
+        }
         $category = DB::table('agents_category')->select('*')->get();
         return view('admin.pages.blog.addblog', ['success' => 'Blog Added Successfuly', 'category' => $category]);
     }
@@ -140,6 +161,15 @@ class EmployeeController extends Controller
 
         $query = DB::table('agents_blog')->where('id', '=', $id)->update($data);
         if ($query == 1) {
+            $popin = Popin::where('blog_id',$id)->first();
+            $url = url('/blogs') .'/'. $id .'/'. $request->title;
+        if($popin){
+            $popin = Popin::where('blog_id',$id)->update([
+            'heading' => $request->title,
+            'description' => $request->description,
+            'url' => $url,
+            ]);
+        }
             $employeelist = DB::table('agents_blog')->select('*')->get();
             return view('admin.pages.blog.bloglist', ['bloglist' => $employeelist, 'success' => 'ok']);
         } else {

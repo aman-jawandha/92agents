@@ -13,7 +13,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-xs-12 col-sm-6">
-                            <h2 class="title">{{ strtoupper($title) }}</h2>
+                            <h2 class="title">{{ strtoupper($title) }} <span><a href="{{route('like-blog',$id)}}" style="font-size:20px" class="badge"><i class="fa fa-thumbs-up"></i>{{$likeCount}}</a></span> | <span><a href="{{route('dislike-blog',$id)}}" style="font-size:20px" class="badge"><i class="fa fa-thumbs-down"></i>{{$dislikeCount}}</a></span></h2>
                             <p>{{ $detail->cat_name }}</p>
                         </div>
                         <div class="col-lg-6 col-md-6 col-xs-12 col-sm-6">
@@ -39,7 +39,8 @@
                 <div class="row">
                     <div class="posts-block col-lg-8 col-md-8 col-sm-8 col-xs-12 margin-bottom60">
                         <h4><i class="fa fa-user"></i> {{ $detail->name }} ({{ $detail->role_name }})
-                            &nbsp; &nbsp; <i class="fa fa-calendar"></i> {{ date('d-m-Y', strtotime($detail->created_date)) }} &nbsp; &nbsp;<i class="fa fa-eye"></i> {{ $detail->view }}
+                            &nbsp; &nbsp; <i class="fa fa-calendar"></i> {{ date('d-m-Y', strtotime($detail->created_date)) }} &nbsp; &nbsp;
+                            @if($detail->role_name == 'agent')<span><a href="{{route('get-agent-rating',$detail->details_id)}}" style="font-size:20px" class="badge">Rate Agent</a></span>@endif
                         </h4>
                         <?php echo $detail->description ?>
                         <hr>

@@ -52,7 +52,7 @@
                                 <div class="col-md-8">
                                     <label>Heading</label>
                                     <input type="text" name="heading" class="form-control" maxlength="250"
-                                        placeholder="Heading" required>
+                                        placeholder="Heading">
                                 </div>
                                 <div class="col-md-12">
                                     <label>Description</label>
@@ -76,6 +76,7 @@
                                         <option value="3">Seller</option>
                                         <option value="2">Buyer</option>
                                         <option value="4">Agent</option>
+                                        <option value="All">All</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
