@@ -24,6 +24,7 @@ Route::any('/lang/{lg}', [Front\LangaugeController::class, 'index']);
 
 Route::controller(Administrator\Admin\PopinController::class)->group(function () {
     Route::get('/show-popin', 'show_popin')->name('show-popin');
+    Route::get('/view-popin', 'view_popin')->name('view-popin');
 });
 
 /* ==================== Front\HomeController ==================== */
@@ -226,6 +227,18 @@ Route::middleware(['auth', 'lang', 'sTime', 'check-user-activation'])->group(fun
         Route::any('/get/proposal/with/shared/{limit}', 'getproposalwithshared');
     });
 
+    Route::controller(Administrator\Agents\AdvertiseController::class)->group(function () {
+        Route::get('/agent-advertisement', 'agent_advertisement')->name('agent-advertisement');
+        Route::get('/agent-advertisement-plans', 'agent_adds_plans')->name('agent-adds-plans');
+        Route::post('/advertisement-payment-form', 'payment_form')->name('advertisement-payment-form');
+        Route::get('/agent-stripe-payment', 'stripe_payment')->name('agent-stripe-payment');
+        Route::get('/agent-add-advertisement', 'create_advrtismnt')->name('create-advrtismnt');
+        Route::post('/store-advertisement', 'store_advrtismnt')->name('store-advrtismnt');
+        Route::get('/agent-edit-advertisement/{id}', 'edit_advrtismnt')->name('edit-advrtismnt');
+        Route::post('/update-advrtismnt', 'update_advrtismnt')->name('update-advrtismnt');
+        Route::get('/delete-advrtismnt/{id}', 'delete_advrtismnt')->name('delete-advrtismnt');
+    });
+
 
     /* ==================== Administrator\Buyer\PostController ==================== */
     Route::controller(Administrator\Buyer\PostController::class)->group(function () {
@@ -417,6 +430,8 @@ Route::middleware(['auth', 'lang', 'sTime', 'check-user-activation'])->group(fun
         Route::get('agent-rating/{id}', 'get_agent_rating')->name('get-agent-rating');
         Route::post('store-agent-rating', 'store_agent_rating')->name('store-agent-rating');
         Route::get('delete-agent-rating/{id}', 'delete_agent_rating')->name('delete-agent-rating');
+        Route::get('like-blog/{id}', 'like_blog')->name('like-blog');
+        Route::get('dislike-blog/{id}', 'dislike_blog')->name('dislike-blog');
     });
 
 

@@ -493,6 +493,7 @@ class HomeController extends Controller
                 'blog.created_date',
                 'blog.view',
                 'cat.cat_name',
+                'user.details_id',
                 'user.name',
                 'userole.role_name'
             )
@@ -501,7 +502,19 @@ class HomeController extends Controller
 
         $category = DB::table('agents_category')->get();
         $comment = DB::table('agents_blog_comment')->whereRaw("blog_id='{$id}'")->get();
-        return view('front.publicPage.singleblog', ['title' => $title, 'id' => $id, 'detail' => $detail, 'category' => $category, 'comment' => $comment]);
+
+        $likeData = DB::table('blog_likes')->where('blog_id', $id)->first();
+        $likeCount = 0;
+        $dislikeCount = 0;
+        if ($likeData) {
+            if (!empty($likeData->likes_by)) {
+                $likeCount = count(explode(',', $likeData->likes_by));
+            }
+            if (!empty($likeData->dislikes_by)) {
+                $dislikeCount = count(explode(',', $likeData->dislikes_by));
+            }
+        }
+        return view('front.publicPage.singleblog', ['title' => $title, 'id' => $id, 'detail' => $detail, 'category' => $category, 'comment' => $comment, 'likeCount' => $likeCount, 'dislikeCount' => $dislikeCount]);
     }
     public function categoryblogs($id, $title)
     {

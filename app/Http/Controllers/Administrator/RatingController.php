@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class RatingController extends Controller
 {
@@ -377,15 +378,54 @@ class RatingController extends Controller
         return response()->json($review);
     }
 
-    public function store_agent_rating(Request $request){
+    public function store_agent_rating(Request $request)
+    {
+        $user = auth()->user();
         $rating = AgentRating::updateOrCreate(
-        ['rating_by' => auth()->user()->id, 'rating_for' => $request->agent_id],
-        [
-            'rating_by_role' => auth()->user()->agents_users_role_id, 
-            'rating' => $request->rating, 
-            'review' => $request->review
-        ]
+            ['rating_by' => $user->id, 'rating_for' => $request->agent_id],
+            [
+                'rating_by_role' => $user->agents_users_role_id, 
+                'rating' => $request->rating, 
+                'review' => $request->review
+            ]
         );
+        if ($request->rating == 5) {
+            $fiveStarCount = AgentRating::where('rating_for', $request->agent_id)->where('rating', 5)->distinct('rating_by')->count('rating_by');
+            if ($fiveStarCount >= 20) {
+                $existingPopin = DB::table('popins')->where('agent_id', $request->agent_id)->where('blog_id', null)->where('status', 'Most Liked')->first();
+                if (!$existingPopin) {
+                        $url = url('/search/agents/details/'.$request->agent_id);
+                        $bg_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+                        $btn_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+                        $designs = ['top','bottom','left','right','full_screen','top_right','bottom_right','top_left','bottom_left'];
+                        $agentDetails = DB::table('agents_users_details')->where('details_id', $request->agent_id)->first();
+                        $profileImage = $agentDetails->photo ?? null;
+                        $image = null;
+                        $description = 'Clients describe this agent as friendly, responsive, and truly dedicated. Your next home journey starts with someone you can trust.';
+                        if ($profileImage && file_exists(public_path("assets/img/profile/$profileImage"))) {
+                                $filename = $profileImage;
+                                $sourcePath = public_path("assets/img/profile/$filename");
+                                $destinationPath = public_path("uploads/popin_images/$filename");
+                                if (copy($sourcePath, $destinationPath)) {
+                                    $image = $filename;
+                                }
+                        }
+                        DB::table('popins')->insert([
+                            'title' => 'Explore Profile',
+                            'agent_id' => $request->agent_id,
+                            'heading' => $agentDetails->name.' (Agent)',
+                            'description' => $description,
+                            'image' => $image,
+                            'url' => $url,
+                            'bg_color' => $bg_color,
+                            'btn_color' => $btn_color,
+                            'design' => $designs[array_rand($designs)],
+                            'status' => 'Most Liked',
+                            'for_whom' => 'All',
+                        ]);
+                }
+            }
+        }
         return redirect()->back()->with('success','Rating added successfully.');
     }
 
@@ -402,5 +442,89 @@ class RatingController extends Controller
     public function delete_agent_rating($agent_id){
         $rating = AgentRating::where('rating_by',auth()->user()->id)->where('rating_for',$agent_id)->delete();
         return redirect()->back()->with('success','Rating deleted successfully.');
+    }
+
+    public function like_blog($blog_id)
+    {
+        $userId = auth()->id();
+        $like = DB::table('blog_likes')->where('blog_id', $blog_id)->first();
+        $message = '';
+        if ($like) {
+            $likesArray = $like->likes_by ? explode(',', $like->likes_by) : [];
+
+            if (in_array($userId, $likesArray)) {
+                $likesArray = array_diff($likesArray, [$userId]);
+                $message = 'Blog like removed successfully.';
+            } else {
+                $likesArray[] = $userId;
+                $message = 'Blog liked successfully.';
+            }
+            DB::table('blog_likes')->where('blog_id', $blog_id)->update([
+                'likes_by' => implode(',', $likesArray),
+            ]);
+        } else {
+            $likesArray = [$userId];
+            DB::table('blog_likes')->insert([
+                'blog_id' => $blog_id,
+                'likes_by' => $userId,
+            ]);
+            $message = 'Blog liked successfully.';
+        }
+        $totalLikes = count($likesArray);   
+
+        if ($totalLikes >= 50) {
+            $existingPopin = DB::table('popins')->where('blog_id', $blog_id)->where('agent_id',auth()->id())->where('status','Most Liked')->first();
+
+            if (!$existingPopin) {
+                $blog = DB::table('agents_blog')->where('id', $blog_id)->first();
+                $url = url('/blogs') .'/'. $blog_id .'/'. $blog->title;
+                $bg_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+                $btn_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+                $designs = ['top','bottom','left','right','full_screen','top_right','bottom_right','top_left','bottom_left'];
+                if ($blog) {
+                    DB::table('popins')->insert([
+                        'title' => 'Explore Blog',
+                        'agent_id' => $blog->added_by,
+                        'blog_id' => $blog_id,
+                        'heading' => $blog->title,
+                        'description' => $blog->description,
+                        'url' => $url,
+                        'bg_color' => $bg_color,
+                        'btn_color' => $btn_color,
+                        'design' => $designs[array_rand($designs)],
+                        'status' => 'Most Liked',
+                        'for_whom' => 'All',
+                    ]);
+                }
+            }
+        }
+        return redirect()->back();
+    }
+
+    public function dislike_blog($blog_id)
+    {
+        $userId = auth()->id();
+        $dislike = DB::table('blog_likes')->where('blog_id', $blog_id)->first();
+        $message = '';
+        if ($dislike) {
+            $dislikesArray = $dislike->dislikes_by ? explode(',', $dislike->dislikes_by) : [];
+            if (in_array($userId, $dislikesArray)) {
+                $dislikesArray = array_diff($dislikesArray, [$userId]);
+                $message = 'Blog dislike removed successfully.';
+            } else {
+                $dislikesArray[] = $userId;
+                $message = 'Blog disliked successfully.';
+            }
+            DB::table('blog_likes')->where('blog_id', $blog_id)->update([
+                'dislikes_by' => implode(',', $dislikesArray),
+            ]);
+        } else {
+            DB::table('blog_likes')->insert([
+                'blog_id' => $blog_id,
+                'dislikes_by' => $userId,
+            ]);
+            $message = 'Blog disliked successfully.';
+        }
+        return redirect()->back();
     }
 }

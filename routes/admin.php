@@ -256,6 +256,17 @@ Route::prefix('agentadmin')->group(function () {
             Route::delete('/delete-popin/{id}', 'delete_popin')->name('admin.delete-popin');
         });
 
+        Route::controller(Administrator\Admin\PlanController::class)->group(function () {
+            Route::get('/plans', 'index')->name('plans-index');
+            Route::get('/create-plan', 'create')->name('create-plan');
+            Route::post('/store-plan', 'store')->name('store-plan');
+            Route::get('/edit-plan/{id}', 'edit')->name('edit-plan');
+            Route::post('/update-plan', 'update')->name('update-plan');
+            Route::delete('/delete-plan/{id}', 'delete')->name('delete-plan');
+            Route::get('/payments', 'payments')->name('payments-index');
+            Route::delete('/delete-payment-record/{id}', 'delete_payment_record')->name('delete-payment-record');
+        });
+
         // Clear application cache:
         Route::get('/clear-all-cache', function () {
             Artisan::call('cache:clear');

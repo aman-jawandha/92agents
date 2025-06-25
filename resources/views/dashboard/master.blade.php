@@ -35,6 +35,19 @@
     // Repeat every 5 minutes
     setInterval(fetchPopin, 5 * 60 * 1000);
 
+    function viewPopin(id) {
+        $.ajax({
+            url: "{{ route('view-popin') }}",
+            type: "GET",
+            data:{
+                popin_id:id,
+            },
+            success: function(html) {
+                $('#show_popin').html(html);
+            }
+        });
+    }
+
     $(document).on("click", ".close_popin", function() {
         $('#show_popin').html('');
     });

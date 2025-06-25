@@ -11,6 +11,7 @@
 	
 	<div class="control-sidebar-bg"></div>
  </div>
+ <div id="show_popin"></div>
   @include('admin.includes.script')
 </body>
 </html>

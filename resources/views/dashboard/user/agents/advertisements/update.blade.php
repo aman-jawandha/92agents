@@ -1,50 +1,47 @@
-@extends('admin.master')
-@section('title', 'dashboard')
+@extends('dashboard.master')
+@section('title', 'home page')
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/plugins/summernote/css/summernote.css') }}">
-    <style>
-        .note-btn-group .btn {
-            color: #000 !important;
-        }
-
-        .btn-group {
-            display: inline-table;
-        }
-    </style>
 @stop
 @section('content')
+    <?php $topmenu = 'Advertise'; ?>
+    <?php $activemenu = 'Advertise'; ?>
+    @include('dashboard.include.sidebar')
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper ">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>
-                Update Pop-in
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="{{ route('admin.popins') }}">Pop-ins List</a></li>
-                <li class="active">Update Pop-in</li>
-            </ol>
-        </section>
+    <div class="container content profile">
+        <div class="row">
+            <!--Left Sidebar-->
 
-        <!-- Main content -->
-        <section class="content profile">
-
-            <div class="row">
-                <div class="col-md-12">
-
-                    <!-- Profile Image -->
-                    <div class="box box-primary">
-                        <div class="box-body box-profile">
-                            @if (session('success'))
-                                <div class="alert alert-success">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-                            <form method="POST" action="{{ route('admin.update-popin') }}" enctype="multipart/form-data">
+            @include('dashboard.user.agents.include.sidebar')
+            @include('dashboard.user.agents.include.sidebar-dashbord')
+            <!--End Left Sidebar-->
+            <!-- Profile Content -->
+            <div class="col-md-9">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                    <h1 class=" margin-bottom-40 pull-left">Update Advertisement</h1>
+                    <a href="{{ route('agent-advertisement') }}" class="btn-u margin-bottom-25">View Advertisements</a>
+                </div>
+                @if (session('success'))
+                    <p id="succes_alert"
+                        style="background-color: green; color: white; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>{{ session('success') }}</span>
+                        <span style="cursor: pointer; font-weight: bold;"
+                            onclick="document.getElementById('succes_alert').style.display='none'">X</span>
+                    </p>
+                @endif
+                @if (session('error'))
+                    <p id="error_alert"
+                        style="background-color: #bb0505; color: white; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>{{ session('error') }}</span>
+                        <span style="cursor: pointer; font-weight: bold;"
+                            onclick="document.getElementById('error_alert').style.display='none'">X</span>
+                    </p>
+                @endif
+                <div class="row air-card box-shadow-profile" style="background-color: white !important">
+                        <form method="POST" action="{{ route('update-advrtismnt') }}" enctype="multipart/form-data">
                                 <input type="hidden" name="popin_id" value="{{$popin->id}}">
                                 @csrf
+                                @if($popin->status != 'Most Liked')
                                 <div class="col-md-4">
                                     <label>Button Text</label>
                                     <input type="text" name="title" value="{{$popin->title}}" class="form-control" maxlength="50"
@@ -85,11 +82,9 @@
                                     <select class="form-control" name="for_whom" required>
                                         <option {{($popin->for_whom == '3') ? 'selected' : ''}} value="3">Seller</option>
                                         <option {{($popin->for_whom == '2') ? 'selected' : ''}} value="2">Buyer</option>
-                                        <option {{($popin->for_whom == '4') ? 'selected' : ''}} value="4">Agent</option>
                                         <option {{($popin->for_whom == 'All') ? 'selected' : ''}} value="All">All</option>
                                     </select>
                                 </div>
-                                @if($popin->status != 'Most Liked')
                                 <div class="col-md-2">
                                     <label>Status</label>
                                     <select class="form-control" name="status" required>
@@ -98,7 +93,15 @@
                                     </select>
                                 </div>
                                 @else
-                                <input type="hidden" name="status" value="Most Liked">
+                                <input type="hidden" name="title" value="{{$popin->title}}" class="form-control" maxlength="50"
+                                        placeholder="Eg. Explore Blog, Agent Post etc.">
+                                <input type="hidden" name="heading" value="{{$popin->heading}}" class="form-control" maxlength="250"
+                                        placeholder="Heading">
+                                <textarea class="form-control hidden" maxlength="5000" name="description">{{$popin->description}}</textarea>
+                                <input type="hidden" name="url" class="form-control" maxlength="250"
+                                        value="{{$popin->url}}" placeholder="Add url to show button">
+                                <input type="hidden" name="for_whom" value="{{$popin->for_whom}}">
+                                <input type="hidden" name="status" value="{{$popin->status}}">
                                 @endif
                                 <div class="col-md-3">
                                     <label>Backgroud Color</label>
@@ -112,12 +115,21 @@
                                 </div>
                                 <div class="col-md-12">&nbsp;</div>
                                 <div class="col-md-12">
+                                    @php
+                                    if($user_plan){
+                                        $plan_designs = explode(',', $user_plan->designs);
+                                    }else{
+                                        $plan_designs = ['top','bottom','left','right','full_screen','top_right','bottom_right','top_left','bottom_left'];
+                                    }   
+                                    @endphp
                                     <label>Choose Pop-in Design</label>
+                                    @if(in_array('top_right', $plan_designs))
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" value="top_right" name="design"
                                             id="top_right" {{ ($popin->design == 'top_right') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="top_right">Top-Right</label>
                                     </div>
+                                    @endif
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" value="right" name="design"
                                             id="right" {{ ($popin->design == 'right') ? 'checked' : '' }}>
@@ -163,24 +175,15 @@
                                     <button type="submit" class="btn-u btn-u-success">Update</button>
                                 </div>
                             </form>
-                        </div>
-                        <!-- /.box-body -->
-                    </div>
-                    <!-- /.box -->
-
                 </div>
-                <!-- /.col -->
             </div>
-            <!-- /.row -->
-
-        </section>
-        <!-- /.content -->
+            <!-- End Profile Content -->
+        </div>
     </div>
 @endsection
 @section('scripts')
     <script src="{{ URL::asset('assets/plugins/summernote/js/summernote.min.js') }}" type="text/javascript"></script>
-
-    <script type="text/javascript">
-        $('#summernote').summernote();
-    </script>
+<script>
+    $('#summernote').summernote();
+</script>
 @stop

@@ -26,44 +26,53 @@ class AgentsSearchController extends Controller
 	}
 
 	/* For agents search job view */
-	public function index()
-	{
-		$user = Auth::user();
+public function index()
+{
+    $user = Auth::user();
 
-		if (!$user || $user->agents_users_role_id == 4) {
-			return redirect('/login?usertype=' . env('user_role_' . Auth::user()->agents_users_role_id));
-		}
+    if (!$user || $user->agents_users_role_id == 4) {
+        return redirect('/login?usertype=' . env('user_role_' . Auth::user()->agents_users_role_id));
+    }
 
-		$active_post_exists = Post::where('agents_user_id', $user->id)
-			->where('agents_users_role_id', $user->agents_users_role_id)
-			->where('applied_post', 2)
-			->where('final_status', 0)
-			->where('agents_posts.is_deleted', '0')
-			->exists();
+    $active_post_exists = Post::where('agents_user_id', $user->id)
+        ->where('agents_users_role_id', $user->agents_users_role_id)
+        ->where('applied_post', 2)
+        ->where('final_status', 0)
+        ->where('agents_posts.is_deleted', '0')
+        ->exists();
 
-		if (!$active_post_exists) {
-			return view('dashboard.user.buyers.no_post');
-		}
-		
-		$state = new State;
-		$view = [];
+    if (!$active_post_exists) {
+        return view('dashboard.user.buyers.no_post');
+    }
 
-		$view['user'] = $user;
-		$view['userdetails'] = Userdetails::find($user->id);
-		$view['city'] = $state->getCityByAny(['is_deleted' => '0']);
-		$view['state'] = $state->getStateByAny(['is_deleted' => '0', 'status' => '1']);
-		$view['search_post'] = Session::has('search_post') ? Session::get('search_post') : ['searchinputtype' => ''];
+    $state = new State;
+    $view = [];
 
-		$active_post_exists = Post::where('agents_user_id', $user->id)
-			->where('agents_users_role_id', $user->agents_users_role_id)
-			->where('applied_post', 2)
-			->where('final_status', 0)
-			->where('agents_posts.is_deleted', '0')
-			->exists();
+    $view['user'] = $user;
+    $view['userdetails'] = Userdetails::find($user->id);
+    $view['city'] = $state->getCityByAny(['is_deleted' => '0']);
+    $view['state'] = $state->getStateByAny(['is_deleted' => '0', 'status' => '1']);
+    $view['search_post'] = Session::has('search_post') ? Session::get('search_post') : ['searchinputtype' => ''];
 
+    $agents = User::where('agents_users_role_id', 4)->get();
 
-		return view('dashboard.user.search.agentsearch', $view);
-	}
+    $ratingsSummary = DB::table('ratings')->selectRaw('rating_for, COUNT(*) as total, AVG(rating) as average')
+        ->whereIn('rating_for', $agents->pluck('id'))
+        ->groupBy('rating_for')
+        ->get()
+        ->keyBy('rating_for')
+        ->map(function ($item) {
+            return [
+                'total' => $item->total,
+                'average' => round($item->average, 1)
+            ];
+        })
+        ->toArray();
+
+    $view['ratings_summary'] = $ratingsSummary;
+
+    return view('dashboard.user.search.agentsearch', $view);
+}
 
 	public function inputclosingdate()
 	{

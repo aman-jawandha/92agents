@@ -402,8 +402,37 @@
                         var types = value.agents_users_role_id == 2 ? 'Buy' : 'Sell';
 
                         var htmll = `<div class="border1-bottom" id="post_list_data_${value.post_id}">` +
-                            `<div class="funny-boxes acpost padding-bottom-5" onclick="redarecturl('/search/post/details/${value.post_id}')">` +
-                            `<h2 class="title line-height-5"><a href="/search/post/details/${value.post_id}">${value.posttitle} <small style="font-size: 55%;">${value.role_name}</small></a></h2>` +
+                            `<div class="funny-boxes acpost padding-bottom-5">` +
+                            `<div style="display:flex;align-items:center;justify-content:space-between">
+                            <div style="width:70%">
+                            <h2 class="title line-height-5"><a href="/search/post/details/${value.post_id}">${value.posttitle}</a>${value.when_do_you_want_to_sell?.toLowerCase() == 'now' ? `<span class="badge badge-danger" style="margin: 10px;">Urgent ${types}</span>` : ''}</h2>
+                            </div>
+                            <div class="dropdown">
+                                            <button type="button" class="btn btn-default dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-share"></i> Share</button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <p style="margin:2px 5px;">
+                                                        <a class="dropdown-item" style="color:black" href="#" onclick="copyToClipboard('${window.location.origin}/profile/buyer/post/details/${value.post_id}')">
+                                                            <i class="fa fa-copy"></i> &nbsp;Copy Link
+                                                        </a>
+                                                    </p>
+                                                    <p style="margin:2px 5px;">
+                                                        <a class="dropdown-item" style="color:black" href="https://wa.me/?text=${encodeURIComponent(window.location.origin + '/profile/buyer/post/details/' + value.post_id)}" target="_blank">
+                                                            <i class="fa fa-whatsapp"></i> &nbsp;Whatsapp
+                                                        </a>
+                                                    </p>
+                                                    <p style="margin:2px 5px;">
+                                                        <a class="dropdown-item" style="color:black" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin + '/profile/buyer/post/details/' + value.post_id)}" target="_blank">
+                                                            <i class="fa fa-linkedin"></i> &nbsp;LinkedIn
+                                                        </a>
+                                                    </p>
+                                                    <p style="margin:2px 5px;">
+                                                        <a class="dropdown-item" style="color:black" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin + '/profile/buyer/post/details/' + value.post_id)}" target="_blank">
+                                                            <i class="fa fa-facebook"></i> &nbsp;Facebook
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>`+
                             `<div class="funny-boxes-img">` +
                             `<ul class="list-inline">` +
                             `<li><strong> Posted By : </strong> ${value.name}<sub class="${value.login_status} mini"> ${value.login_status} </sub>  </li>  ` +
@@ -787,5 +816,10 @@
                 error: function(result) {}
             });
         }
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => alert("Link copied to clipboard!"))
+        .catch(err => alert("Failed to copy link."));
+}
     </script>
 @endsection

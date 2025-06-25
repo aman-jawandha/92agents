@@ -3,7 +3,16 @@
 @section('title', 'home page')
 
 @section('style')
-
+<style>
+    @keyframes popBounce {
+    0%, 100% {
+      transform: translateY(-50%) scale(1);
+    }
+    50% {
+      transform: translateY(-50%) scale(1.2);
+    }
+  }
+</style>
 @endsection
 
 @section('content')
@@ -22,8 +31,13 @@
 
             <!-- Profile Content -->
             <div class="col-md-9">
+                <div style="display:flex;align-items:center;justify-content:space-between">
                 <h1 class="margin-bottom-40">Welcome to your Dashboard.</h1>
-
+                <div class="margin-bottom-30">
+                <a href="{{route('agent-advertisement')}}" class="btn-u">Advertise Your Skills</a>
+                <a href="{{route('get-agent-rating',auth()->id())}}" class="btn-u">Ratings</a>
+                </div>
+                </div>
                 <div class="box-shadow-profile hide homedata homedatanotes margin-bottom-40">
                     <!-- Default Proposals -->
                     <div class="panel-profile">

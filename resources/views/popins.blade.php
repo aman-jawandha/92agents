@@ -38,7 +38,6 @@
         right: 0;
         width: 300px;
         height: 100vh;
-        overflow-y: auto;
         padding: 20px;
         text-align: center;
         transform: translateX(100%);
@@ -54,7 +53,6 @@
         left: 0;
         width: 300px;
         height: 100vh;
-        overflow-y: auto;
         padding: 20px;
         text-align: center;
         transform: translateX(-100%);
@@ -131,13 +129,29 @@
     @keyframes fadeIn {
         to { opacity: 1; }
     }
+.btn {
+    font-weight: 700;
+    border-radius: 2px;
+    color: #74c52c;
+    border-color: transparent !important;
+    box-shadow: 0 1px 6px rgba(57, 73, 76, 0.52);
+    line-height: 14px;
+    padding: 8px 15px;
+}
 </style>
 
 {{-- ========================= Mark‑up ========================= --}}
 {{-- Bottom --}}
 @if ($popin->design == 'bottom')
     <div id="bottom-overlay" class="popin-overlay" style="background-color:{{ $popin->bg_color }}">
-        <p class="popin-close close_popin">✖</p>
+        <div style="display:flex;justify-content:space-between">
+            @if($popin->status == 'Most Liked')
+            <span class="badge">Most Liked</span>
+            @else
+            <span class="badge">Sponsered</span>
+            @endif
+            <p class="popin-close close_popin">✖</p>
+        </div>
         <div style="display:flex;align-items:center">
             <div style="width:10%">
                 @if ($popin->image)
@@ -146,7 +160,7 @@
             </div>
             <div style="width:75%;text-align:left">
                 <h3>{{ $popin->heading }}</h3>
-                <div>{!! $popin->description !!}</div>
+                <div style="height:100px;overflow:hidden">{!! $popin->description !!}</div>
             </div>
             <div style="width:10%">
                 @if ($popin->url)
@@ -158,12 +172,19 @@
 {{-- Right --}}
 @elseif($popin->design == 'right')
     <div id="right-overlay" class="popin-overlay" style="background-color: {{ $popin->bg_color }}">
-        <p class="popin-close close_popin">✖</p>
+        <div style="display:flex;justify-content:space-between">
+            @if($popin->status == 'Most Liked')
+            <span class="badge">Most Liked</span>
+            @else
+            <span class="badge">Sponsered</span>
+            @endif
+            <p class="popin-close close_popin">✖</p>
+        </div>
         <h3 style="margin-top:30px">{{ $popin->heading }}</h3>
         @if ($popin->image)
             <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="70%" style="margin:20px 0" alt="Image">
         @endif
-        <div style="margin:20px 0">{!! $popin->description !!}</div>
+        <div style="margin:20px 0;height:150px;overflow:hidden">{!! $popin->description !!}</div>
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }}">{{ $popin->title }}</a>
         @endif
@@ -171,22 +192,36 @@
 {{-- Top‑Right --}}
 @elseif($popin->design == 'top_right')
     <div id="top-right-overlay" class="popin-overlay" style="background-color: {{ $popin->bg_color }}">
-        <p class="popin-close close_popin">✖</p>
+        <div style="display:flex;justify-content:space-between">
+            @if($popin->status == 'Most Liked')
+            <span class="badge">Most Liked</span>
+            @else
+            <span class="badge">Sponsered</span>
+            @endif
+            <p class="popin-close close_popin">✖</p>
+        </div>
         <div style="display:flex;align-items:center">
             @if ($popin->image)
                 <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" style="border-radius:50%;width:50px;height:50px;margin:10px" alt="Image">
             @endif
-            <p><b>{{ $popin->heading }}</b></p>
+            <p style="margin-top:10px"><b>{{ $popin->heading }}</b></p>
         </div>
-        <div>{!! $popin->description !!}</div>
+        <div style="height:150px;overflow:hidden">{!! $popin->description !!}</div>
         @if ($popin->url)
-            <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="width:100%;background-color:{{ $popin->btn_color }};">{{ $popin->title }}</a>
+            <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="width:100%;background-color:{{ $popin->btn_color }};margin-top:10px">{{ $popin->title }}</a>
         @endif
     </div>
 {{-- Bottom‑Right --}}
 @elseif($popin->design == 'bottom_right')
     <div id="bottom-right-overlay" class="popin-overlay" style="background-color: {{ $popin->bg_color }}">
-        <p class="popin-close close_popin">✖</p>
+        <div style="display:flex;justify-content:space-between">
+            @if($popin->status == 'Most Liked')
+            <span class="badge">Most Liked</span>
+            @else
+            <span class="badge">Sponsered</span>
+            @endif
+            <p class="popin-close close_popin">✖</p>
+        </div>
         <div style="display:flex;align-items:center">
             @if ($popin->image)
                 <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" style="border-radius:50%;width:50px;height:50px;margin:10px" alt="Image">
@@ -196,18 +231,25 @@
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="width:100%;background-color:{{ $popin->btn_color }};margin-bottom:10px">{{ $popin->title }}</a>
         @endif
-        <div>{!! $popin->description !!}</div>
+        <div style="height:150px;overflow:hidden">{!! $popin->description !!}</div>
     </div>
 {{-- ================= NEW POSITIONS ================= */
 {{-- Left --}}
 @elseif($popin->design == 'left')
     <div id="left-overlay" class="popin-overlay" style="background-color: {{ $popin->bg_color }}">
-        <p class="popin-close close_popin">✖</p>
+        <div style="display:flex;justify-content:space-between">
+            @if($popin->status == 'Most Liked')
+            <span class="badge">Most Liked</span>
+            @else
+            <span class="badge">Sponsered</span>
+            @endif
+            <p class="popin-close close_popin">✖</p>
+        </div>
         <h3 style="margin-top:30px">{{ $popin->heading }}</h3>
         @if ($popin->image)
             <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="70%" style="margin:20px 0" alt="Image">
         @endif
-        <div style="margin:20px 0">{!! $popin->description !!}</div>
+        <div style="margin:20px 0;height:150px;overflow:hidden">{!! $popin->description !!}</div>
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }}">{{ $popin->title }}</a>
         @endif
@@ -215,14 +257,21 @@
 {{-- Top (full‑width banner) --}}
 @elseif($popin->design == 'top')
     <div id="top-overlay" class="popin-overlay" style="background-color:{{ $popin->bg_color }}">
-        <p class="popin-close close_popin">✖</p>
+        <div style="display:flex;justify-content:space-between">
+            @if($popin->status == 'Most Liked')
+            <span class="badge">Most Liked</span>
+            @else
+            <span class="badge">Sponsered</span>
+            @endif
+            <p class="popin-close close_popin">✖</p>
+        </div>
         <div style="display:flex;align-items:center;justify-content:center">
             @if ($popin->image)
                 <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="100px" alt="Image" style="margin-right:15px">
             @endif
             <div style="text-align:left">
                 <h3>{{ $popin->heading }}</h3>
-                <div>{!! $popin->description !!}</div>
+                <div style="height:100px;overflow:hidden">{!! $popin->description !!}</div>
             </div>
             @if ($popin->url)
                 <div style="margin-left:15px">
@@ -234,37 +283,58 @@
 {{-- Top‑Left --}}
 @elseif($popin->design == 'top_left')
     <div id="top-left-overlay" class="popin-overlay" style="background-color: {{ $popin->bg_color }}">
-        <p class="popin-close close_popin">✖</p>
+        <div style="display:flex;justify-content:space-between">
+            @if($popin->status == 'Most Liked')
+            <span class="badge">Most Liked</span>
+            @else
+            <span class="badge">Sponsered</span>
+            @endif
+            <p class="popin-close close_popin">✖</p>
+        </div>
         <div style="display:flex;align-items:center">
             @if ($popin->image)
                 <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" style="border-radius:50%;width:50px;height:50px;margin:10px" alt="Image">
             @endif
-            <p><b>{{ $popin->heading }}</b></p>
+            <p style="margin-top:10px"><b>{{ $popin->heading }}</b></p>
         </div>
-        <div>{!! $popin->description !!}</div>
+        <div style="height:150px;overflow:hidden">{!! $popin->description !!}</div>
         @if ($popin->url)
-            <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="width:100%;background-color:{{ $popin->btn_color }}">{{ $popin->title }}</a>
+            <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="width:100%;background-color:{{ $popin->btn_color }};margin-top:10px">{{ $popin->title }}</a>
         @endif
     </div>
 {{-- Bottom‑Left --}}
 @elseif($popin->design == 'bottom_left')
     <div id="bottom-left-overlay" class="popin-overlay" style="background-color: {{ $popin->bg_color }}">
-        <p class="popin-close close_popin">✖</p>
+        <div style="display:flex;justify-content:space-between">
+            @if($popin->status == 'Most Liked')
+            <span class="badge">Most Liked</span>
+            @else
+            <span class="badge">Sponsered</span>
+            @endif
+            <p class="popin-close close_popin">✖</p>
+        </div>
         <div style="display:flex;align-items:center">
             @if ($popin->image)
                 <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" style="border-radius:50%;width:50px;height:50px;margin:10px" alt="Image">
             @endif
-            <p><b>{{ $popin->heading }}</b></p>
+            <p style="margin-top:10px"><b>{{ $popin->heading }}</b></p>
         </div>
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="width:100%;background-color:{{ $popin->btn_color }};margin-bottom:10px">{{ $popin->title }}</a>
         @endif
-        <div>{!! $popin->description !!}</div>
+        <div style="height:150px;overflow:hidden">{!! $popin->description !!}</div>
     </div>
 {{-- Full‑Screen --}}
 @elseif($popin->design == 'full_screen')
     <div id="fullscreen-overlay" class="popin-overlay" style="background-color: {{ $popin->bg_color }}">
-        <p class="popin-close close_popin" style="position:absolute;top:20px;right:20px">✖</p>
+        <div style="display:flex;justify-content:space-between">
+            @if($popin->status == 'Most Liked')
+            <span class="badge" style="position:absolute;top:20px;left:20px">Most Liked</span>
+            @else
+            <span class="badge" style="position:absolute;top:20px;left:20px">Sponsered</span>
+            @endif
+            <p class="popin-close close_popin" style="position:absolute;top:20px;right:20px">✖</p>
+        </div>
         <div class="row">
             <div class="col-md-1"></div>
             <div class="col-md-3">
@@ -279,7 +349,7 @@
                 @endif
             </div>
             <div class="col-md-7">
-                <div style="max-width:100%;margin:0 auto">{!! $popin->description !!}</div>
+                <div style="max-width:100%;margin:0 auto;height:80vh;overflow:hidden">{!! $popin->description !!}</div>
             </div>
             <div class="col-md-1"></div>
         </div>
