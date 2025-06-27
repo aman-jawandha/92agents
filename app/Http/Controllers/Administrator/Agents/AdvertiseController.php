@@ -105,33 +105,51 @@ class AdvertiseController extends Controller
     return redirect()->route('agent-adds-plans')->with('error', 'Payment failed or was cancelled.');
     }
 
-     public function create_advrtismnt(){
-        $user_plan = DB::table('user_plans')->where('user_id',auth()->id())->first();
-        $user_popins = Popin::where('agent_id',auth()->id())->where('status','Active')->count();
-        if($user_plan && $user_plan->start_date <= date('Y-m-d') && $user_plan->end_date >= date('Y-m-d')){
-             if($user_plan->no_of_popins > $user_popins){
-            return view('dashboard.user.agents.advertisements.create',compact('user_plan'));
-        }else{
-            return redirect()->back()->with('error', 'Your plan limit for active advertisements has been reached. Please upgrade your plan or set an existing advertisement to Inactive to proceed.');
+     public function create_advrtismnt() {
+        $user_plan = DB::table('user_plans')->where('user_id', auth()->id())->first();
+        $user_popins = Popin::where('agent_id', auth()->id())->where('status', 'Active')->count();
+        $user_points = auth()->user()->points ?? 0;
+        $today = date('Y-m-d');
+        $has_valid_plan = $user_plan && $user_plan->start_date <= $today && $user_plan->end_date >= $today;
+        if ($has_valid_plan) {
+            if ($user_plan->no_of_popins > $user_popins) {
+                return view('dashboard.user.agents.advertisements.create', compact('user_plan'));
+            } elseif ($user_points >= 20) {
+                return view('dashboard.user.agents.advertisements.create', compact('user_plan'));
+            } else {
+                return redirect()->back()->with('error', 'Your plan limit for active advertisements has been reached. Please upgrade your plan, set an advertisement to Inactive, or earn at least 20 points to proceed.');
+            }
+        } elseif ($user_points >= 20) {
+            return view('dashboard.user.agents.advertisements.create', compact('user_plan'));
+        } else {
+            return redirect()->back()->with('error', 'Please subscribe to a plan or earn at least 20 points to add an advertisement.');
         }
-        }else{
-            return redirect()->back()->with('error', 'Please subscribe any plan to add advertisement');
-        } 
-     }
+    }
 
-     public function store_advrtismnt(Request $request){
+    public function store_advrtismnt(Request $request)
+    {
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = $file->getClientOriginalName();
             $file->move(public_path('uploads/popin_images'), $filename);
             $image = $filename;
-        }else{
+        } else {
             $image = null;
         }
-        $popin = Popin::create([
+        $user = auth()->user();
+        $user_plan = DB::table('user_plans')
+            ->where('user_id', $user->id)
+            ->first();
+        $user_popins = Popin::where('agent_id', $user->id)
+            ->where('status', 'Active')
+            ->count();
+        $today = date('Y-m-d');
+        $has_valid_plan = $user_plan && $user_plan->start_date <= $today && $user_plan->end_date >= $today;
+        $under_limit = $has_valid_plan && $user_plan->no_of_popins > $user_popins;
+        Popin::create([
             'for_whom' => $request->for_whom,
             'title' => $request->title,
-            'heading' => $request->heading	,
+            'heading' => $request->heading,
             'description' => $request->description,
             'url' => $request->url,
             'bg_color' => $request->bg_color,
@@ -139,9 +157,18 @@ class AdvertiseController extends Controller
             'design' => $request->design,
             'status' => $request->status,
             'image' => $image,
-            'agent_id' => auth()->id(),
+            'agent_id' => $user->id,
         ]);
-        return redirect()->route('agent-advertisement')->with('success','Advertisement added successfully');
+        if (!$under_limit) {
+            DB::table('agents_users')->where('id', $user->id)->decrement('points', 20);
+            DB::table('agent_points_history')->insert([
+                'agent_id' => $user->id,
+                'minus_points' => 20,
+                'points_for' => 'Created advertisement using points',
+            ]);
+        }
+
+        return redirect()->route('agent-advertisement')->with('success', 'Advertisement added successfully');
     }
 
     public function edit_advrtismnt($id){
@@ -151,9 +178,6 @@ class AdvertiseController extends Controller
     }
 
     public function update_advrtismnt(Request $request){
-        $user_plan = DB::table('user_plans')->where('user_id',auth()->id())->first();
-        $user_popins = Popin::where('agent_id',auth()->id())->where('status','Active')->count();
-        if(($user_plan && $user_plan->no_of_popins > $user_popins) || ($request->status != 'Active')){
             $popin = Popin::where('id',$request->popin_id)->first();
             $popin->for_whom = $request->for_whom;
             $popin->title = $request->title;
@@ -172,13 +196,58 @@ class AdvertiseController extends Controller
             }
             $popin->save();
             return redirect()->back()->with('success','Advertisement updated successfully');
-        }else{
-            return redirect()->back()->with('error', 'You already have the maximum number of active advertisements, allowed by your current plan. Please change status of this or any other advertisement to inactive or upgrade your plan.');
+        }
+
+    public function update_popin_status($popin_id)
+    {
+        $popin = Popin::where('id', $popin_id)->where('agent_id', auth()->id())->firstOrFail();
+        $user_plan = DB::table('user_plans')
+            ->where('user_id', auth()->id())
+            ->first();
+        $user_popins = Popin::where('agent_id', auth()->id())
+            ->where('status', 'Active')
+            ->count();
+        $user = auth()->user();
+        $user_points = $user->points ?? 0;
+        $today = date('Y-m-d');
+        $has_valid_plan = $user_plan && $user_plan->start_date <= $today && $user_plan->end_date >= $today;
+        $can_activate_by_plan = $has_valid_plan && $user_plan->no_of_popins > $user_popins;
+        $can_activate_by_points = $user_points >= 20;
+        if ($popin->status === 'Active') {
+            $popin->status = 'Inactive';
+            $popin->save();
+            return redirect()->back()->with('success', 'Advertisement deactivated successfully.');
+        } else {
+            if ($can_activate_by_plan || $can_activate_by_points) {
+                if (!$can_activate_by_plan && $can_activate_by_points) {
+                    DB::table('agents_users')->where('id', $user->id)->decrement('points', 20);
+                    DB::table('agent_points_history')->insert([
+                        'agent_id' => $user->id,
+                        'minus_points' => 20,
+                        'points_for' => 'Activated advertisement using points',
+                    ]);
+                }
+                $popin->status = 'Active';
+                $popin->save();
+                return redirect()->back()->with('success', 'Advertisement activated successfully.');
+            } else {
+                return redirect()->back()->with('error', 'Cannot activate: your plan limit is reached and you don’t have enough points. Upgrade your plan or reach at least 20 points to activate this advertisement.');
+            }
         }
     }
 
      public function delete_advrtismnt($id){
         $popin = Popin::where('id',$id)->delete();
         return redirect()->back()->with('success','Advertisement deleted successfully');
+    }
+
+    public function agent_points($id){
+        $points = DB::table('agent_points_history')->where('agent_id',$id)->paginate(10);
+        return view('dashboard.user.agents.advertisements.points',compact('points'));
+    }
+
+    public function delete_points_history($id){
+        $popin = DB::table('agent_points_history')->where('agent_id',$id)->delete();
+        return redirect()->back()->with('success','History deleted successfully.');
     }
 }

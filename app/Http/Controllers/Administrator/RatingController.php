@@ -423,6 +423,12 @@ class RatingController extends Controller
                             'status' => 'Most Liked',
                             'for_whom' => 'All',
                         ]);
+                        $points = DB::table('agents_users')->where('id', auth()->id())->increment('points', 5);
+                        $points_history = DB::table('agent_points_history')->insert([
+                            'agent_id' => auth()->id(),
+                            'plus_points' => 5,
+                            'points_for' => 'For getting five start rating from twenty users.',
+                        ]);
                 }
             }
         }
@@ -495,6 +501,12 @@ class RatingController extends Controller
                         'status' => 'Most Liked',
                         'for_whom' => 'All',
                     ]);
+                    $points = DB::table('agents_users')->where('id', auth()->id())->increment('points', 5);
+                        $points_history = DB::table('agent_points_history')->insert([
+                            'agent_id' => auth()->id(),
+                            'plus_points' => 5,
+                            'points_for' => 'For getting fifty likes on a blog.',
+                        ]);
                 }
             }
         }

@@ -598,7 +598,7 @@
       <form action="{{ route('feedback') }}" method="POST">
         @csrf
         <div class="modal-body">
-            <input type="email" class="form-control" name="email" maxlength="50" placeholder="Your Email"><br>
+            <input type="email" value="{{auth()->user()->email ?? ''}}" class="form-control" name="email" maxlength="50" placeholder="Your Email" required><br>
           <textarea name="message" class="form-control" rows="4" required maxlength="1000" placeholder="Write your thoughts..."></textarea>
         </div>
         <div class="modal-footer">

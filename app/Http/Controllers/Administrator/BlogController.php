@@ -56,15 +56,16 @@ class BlogController extends Controller
 
         $user_plan = DB::table('user_plans')->where('user_id',auth()->id())->first();
 
+        $status = 'Inactive';
+        $designs = ['top','bottom','left','right','full_screen','top_right','bottom_right','top_left','bottom_left'];
         if($user_plan && $user_plan->start_date <= date('Y-m-d') && $user_plan->end_date >= date('Y-m-d')){
         $designs = explode(',',$user_plan->designs);
         $user_popins = Popin::where('agent_id',auth()->id())->where('status','Active')->count();
         if($user_plan->no_of_popins > $user_popins){
             $status = 'Active';
-        }else{
-            $status = 'Inactive';
         }
-        if($blog_id){
+        }
+        if($blog_id && auth()->user()->agents_users_role_id == '4'){
             $popin = Popin::create([
             'for_whom' => 'All',
             'title' => 'Explore Blog',
@@ -78,8 +79,14 @@ class BlogController extends Controller
             'agent_id' => auth()->id(),
             'blog_id' => $blog_id,
         ]);
+
+        $points = DB::table('agents_users')->where('id', auth()->id())->increment('points', 5);
+        $points_history = DB::table('agent_points_history')->insert([
+            'agent_id' => auth()->id(),
+            'plus_points' => 5,
+            'points_for' => 'For posting a blog',
+        ]);
         }
-    }
         $category = DB::table('agents_category')->select('*')->get();
         $view['user'] = $user = Auth::user();
         $view['userdetails'] = $userdetails = Userdetails::find($user->id);
@@ -158,5 +165,21 @@ class BlogController extends Controller
     public function delblog($id)
     {
         $res = DB::table('agents_blog')->where('id', '=', $id)->delete();
+    }
+
+    public function add_blog_comment(Request $req)
+    {
+        $maxComId = DB::table('agents_blog_comment')->max('com_id');
+        $nextComId = $maxComId ? $maxComId + 1 : 1;
+
+        DB::table('agents_blog_comment')->insert([
+            'com_id' => $nextComId,
+            'blog_id' => $req->blog_id,
+            'comment_name' => $req->comment_name,
+            'email' => $req->email,
+            'comment' => $req->comment,
+        ]);
+
+        return redirect()->back()->with('success', 'Comment added successfully.');
     }
 }

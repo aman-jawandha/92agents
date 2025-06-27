@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('agent_users', function (Blueprint $table) {
+        Schema::table('agents_users', function (Blueprint $table) {
             // Add facebook_id (nullable and unique)
             $table->string('facebook_id')->nullable()->unique();
 
             // Make password column nullable
             $table->string('password')->nullable()->change();
+            $table->integer('points')->nullable();
         });
     }
 
@@ -29,11 +30,12 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('agent_users', function (Blueprint $table) {
+        Schema::table('agents_users', function (Blueprint $table) {
             $table->dropColumn('facebook_id');
 
             // Revert password column to NOT NULL (you can adjust if needed)
             $table->string('password')->nullable(false)->change();
+            $table->dropColumn('points');
         });
     }
 };
