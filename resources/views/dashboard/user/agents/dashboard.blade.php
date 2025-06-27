@@ -36,6 +36,7 @@
                 <div class="margin-bottom-30">
                 <a href="{{route('agent-advertisement')}}" class="btn-u">Advertise Your Skills</a>
                 <a href="{{route('get-agent-rating',auth()->id())}}" class="btn-u">Ratings</a>
+                <a href="{{route('agent-points',auth()->id())}}" class="btn-u">Reward Points</a>
                 </div>
                 </div>
                 <div class="box-shadow-profile hide homedata homedatanotes margin-bottom-40">

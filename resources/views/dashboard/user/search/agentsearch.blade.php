@@ -460,8 +460,10 @@
                         let rating = ratingsSummary[value.id] ?? { total: 0, average: 0 };
                         var htmll =
                             `<div class="col-md-4" style="padding:15px" id="agents_list_data_${value.id}">
-									<div class="funny-boxes acpost" onclick="redarecturl('{{ URL('/') }}/search/agents/details/${value.id}')">`;
-                        htmll += `<p><strong>Total Ratings:</strong> ${rating.total} | <strong>Average Rating:</strong> ${rating.average}</p>`;
+									<div class="funny-boxes acpost">`;
+                        htmll += `<p onclick="redarecturl('{{ URL('/') }}/agent-rating/${value.id}')"><strong>Total Ratings:</strong> ${rating.total} | <strong>Average Rating:</strong> ${rating.average}</p>
+                        <div onclick="redarecturl('{{ URL('/') }}/search/agents/details/${value.id}')">
+                        `;
                         if (value.photo) {
                             htmll +=
                                 `<img class="img-circle header-circle-img1 img-margin" width="80" height="80" src="{{ URL::asset('assets/img/profile/') }}/${value.photo}" alt="">`;
@@ -505,6 +507,7 @@
 									<li><a><strong> Agent Details </strong></a></li>
 								</ul>
 							</div>
+                            </div>
 						</div>`;
 
                         var msc = $('#agents_list_data_' + value.id).find('#append-agents-ajax');

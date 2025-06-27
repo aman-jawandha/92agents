@@ -236,7 +236,10 @@ Route::middleware(['auth', 'lang', 'sTime', 'check-user-activation'])->group(fun
         Route::post('/store-advertisement', 'store_advrtismnt')->name('store-advrtismnt');
         Route::get('/agent-edit-advertisement/{id}', 'edit_advrtismnt')->name('edit-advrtismnt');
         Route::post('/update-advrtismnt', 'update_advrtismnt')->name('update-advrtismnt');
+        Route::get('/advrtismnt-change-status/{id}', 'update_popin_status')->name('advrtismnt-change-status');
         Route::get('/delete-advrtismnt/{id}', 'delete_advrtismnt')->name('delete-advrtismnt');
+        Route::get('/agent-points/{id}', 'agent_points')->name('agent-points');
+        Route::get('/delete-points-history/{id}', 'delete_points_history')->name('delete-points-history');
     });
 
 
@@ -516,6 +519,7 @@ Route::middleware(['auth', 'lang', 'sTime', 'check-user-activation'])->group(fun
             Route::get('/get/blog/{id}', 'getSingleBlog');
             Route::get('/get/single-blog/{id}', 'getSingleBlogview');
         });
+        Route::post('add-blog-comment', 'add_blog_comment')->name('add-blog-comment');
     });
 
 

@@ -14,6 +14,7 @@ use App\Models\Rating;
 use App\Models\Importance;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
@@ -86,7 +87,12 @@ class QuestionAnswersController extends Controller
         } else {
             $msg = "Survey Question has been added";
         }
-
+        $points = DB::table('agents_users')->where('id', auth()->id())->increment('points', 5);
+        $points_history = DB::table('agent_points_history')->insert([
+            'agent_id' => auth()->id(),
+            'plus_points' => 5,
+            'points_for' => 'For posting a question',
+        ]);
         return response()->json(["status" => "100", "msg" => $msg, 'data' => $qid]);
     }
 
@@ -140,7 +146,12 @@ class QuestionAnswersController extends Controller
         $noti->notification_message        = $request->notification_message;
         $noti->updated_at                  = Carbon::now()->toDateTimeString();
         $noti->save();
-
+        $points = DB::table('agents_users')->where('id', auth()->id())->increment('points', 5);
+        $points_history = DB::table('agent_points_history')->insert([
+            'agent_id' => auth()->id(),
+            'plus_points' => 5,
+            'points_for' => 'For posting an answer',
+        ]);
         event(new eventTrigger([$request->all(), $resutl, 'NewNotification']));
         return response()->json(["msg" => "This question answers successfully send."]);
     }
@@ -204,6 +215,12 @@ class QuestionAnswersController extends Controller
                 }
             }
         }
+        $points = DB::table('agents_users')->where('id', auth()->id())->increment('points', 5);
+        $points_history = DB::table('agent_points_history')->insert([
+            'agent_id' => auth()->id(),
+            'plus_points' => 5,
+            'points_for' => 'For posting an answer',
+        ]);
         event(new eventTrigger([$request->all(), $resutl, 'NewNotification']));
         return response()->json(["msg" => "This question answers successfully send."]);
     }

@@ -39,25 +39,22 @@
                 <div class="col-md-12" style="padding: 8px">
                     <div class="air-card box-shadow-profile" style="border-radius:10px;background-color: white !important">
                         <div style="display:flex;align-items:center;justify-content:space-between">
-                        <h3 style="color:#6ecd1b"><b>{{$popin->title}}</b></h3>
+                        <h3 style="color:#6ecd1b"><b>{{$popin->heading ?? 'Heading'}}</b></h3>
                         <div>
                             @if($popin->status == "Active")
-                            <button type="button" class="btn btn-success btn-sm" style="color:white !important;">{{$popin->status}}</button>
+                            <a href="{{ route('advrtismnt-change-status',$popin->id) }}" onclick="return confirm('Are you sure you want to change status of this advertisement?')" class="btn btn-success btn-sm" style="color:white !important;">{{$popin->status}}</a>
                             @elseif($popin->status == "Inactive")
-                            <button type="button" class="btn btn-danger btn-sm" style="color:white !important;">{{$popin->status}}</button>
+                            <a href="{{ route('advrtismnt-change-status', $popin->id) }}" onclick="return confirm('Are you sure you want to change status of this advertisement?')" class="btn btn-danger btn-sm" style="color:white !important;">{{$popin->status}}</a>
                             @elseif($popin->status == "Most Liked")
                             <button type="button" class="btn btn-warning btn-sm" style="color:white !important;">{{$popin->status}}</button>
                             @endif
                             <button type="button" onclick="viewPopin('{{$popin->id}}')" class="btn btn-success btn-sm" style="color:white !important;">View</button>
-                            @if(($user_plan && $user_plan->start_date <= date('Y-m-d') && $user_plan->end_date >= date('Y-m-d')) || $popin->status == 'Most Liked')
                             <a href="{{route('edit-advrtismnt',$popin->id)}}" class="btn btn-success btn-sm"><i class="fa fa-edit" style="color:white !important;"></i></a>
-                            @endif
                             <a href="{{ route('delete-advrtismnt', $popin->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this advertisement?')">
                             <i class="fa fa-trash" style="color:white !important;"></i>
                         </a>
                         </div>
                         </div>
-                        <h6><b>{{$popin->heading}}</b></h6>
                         <hr style="margin:12px 0px 0px 0px">
                         <div style="max-height:150px;overflow-y:auto;padding-right:5px;">
                             <p style="margin:12px 0px">Description</p>

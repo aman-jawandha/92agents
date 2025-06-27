@@ -44,34 +44,18 @@
                         </h4>
                         <?php echo $detail->description ?>
                         <hr>
+                        <button type="button" class="btn btn-success" onclick="$('#comment_modal').modal('show')">Add Comment</button>
+                        <hr>
                         <h3>User Comments:</h3>
                         <div class="showcomment">
                             <ul style="list-style: none;">
                                 @foreach($comment as $comm)
-                                <li><i class="fa fa-user"></i> <b>{{ $comm->comment_name }}</b>&nbsp; &nbsp; &nbsp; &nbsp; <i class="fa fa-calendar"></i> <b>{{ $comm->com_date }}</b><br>
-                                    <p>{{ $comm->comment }}</p>
-                                </li>
+                                <li><i class="fa fa-user"></i> <b>{{ $comm->email }}</b>&nbsp; &nbsp; &nbsp; &nbsp; <i class="fa fa-calendar"></i> <b>{{ $comm->com_date }}</b><br>
+                                    {!! nl2br(e($comm->comment)) !!}
+                                </li><br>
                                 @endforeach
                             </ul>
                         </div>
-                        <form id="comment" method="POST">
-                            {{ csrf_field() }}
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <input type="hidden" name="blog_id" value="{{ $id }}">
-                                    <input type="text" name="comment_name" placeholder="Full Name" required="" class="form-control">
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="email" name="email" placeholder="Enter your email" required="" class="form-control">
-                                </div>
-                                <div class="col-md-12">
-                                    <textarea class="form-control" rows="5" placeholder="Your Comment here..." name="comment"></textarea>
-                                    <br>
-                                    <p class="hide comment-error" style="color: #f00;">Comment is field is required</p>
-                                    <input type="submit" class="btn btn-lg btn-success" id="sbm">
-                                </div>
-                            </div>
-                        </form>
                     </div>
                     <div class="posts-block col-lg-4 col-md-4 col-sm-4 col-xs-12">
                          <div class="">
@@ -94,6 +78,41 @@
      
     </section>
     <!-- /Main Section -->
+    <!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="comment_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Comment</h5>
+        <button type="button" class="close" onclick="$('#comment_modal').modal('hide')" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+           <form action="{{route('add-blog-comment')}}" method="POST">
+                            {{ csrf_field() }}
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <input type="hidden" name="blog_id" value="{{ $id }}">
+                                    <input type="text" name="comment_name" placeholder="Full Name" maxlength="50" required class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="email" name="email" placeholder="Enter your email" maxlength="50" required class="form-control">
+                                </div>
+                                <div class="col-md-12">
+                                    <textarea class="form-control" maxlength="250" rows="5" placeholder="Your Comment here..." name="comment" required></textarea>
+                                </div>
+                            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-lg btn-success">Submit</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
 @endsection
 <!-- content end -->
 

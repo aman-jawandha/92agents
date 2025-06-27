@@ -501,7 +501,7 @@ class HomeController extends Controller
             ->first();
 
         $category = DB::table('agents_category')->get();
-        $comment = DB::table('agents_blog_comment')->whereRaw("blog_id='{$id}'")->get();
+        $comment = DB::table('agents_blog_comment')->where('blog_id',$id)->orderBy('com_id','DESC')->get();
 
         $likeData = DB::table('blog_likes')->where('blog_id', $id)->first();
         $likeCount = 0;

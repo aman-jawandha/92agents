@@ -77,7 +77,7 @@
                                         value="{{$popin->url}}" placeholder="Add url to show button">
                                 </div>
                                 <div class="col-md-12">&nbsp;</div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label>Whom To Show?</label>
                                     <select class="form-control" name="for_whom" required>
                                         <option {{($popin->for_whom == '3') ? 'selected' : ''}} value="3">Seller</option>
@@ -85,13 +85,14 @@
                                         <option {{($popin->for_whom == 'All') ? 'selected' : ''}} value="All">All</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2">
+                                <input type="hidden" name="status" value="{{$popin->status}}">
+                                {{-- <div class="col-md-2">
                                     <label>Status</label>
                                     <select class="form-control" name="status" required>
                                         <option {{($popin->status == 'Active') ? 'selected' : ''}} value="Active">Active</option>
                                         <option {{($popin->status == 'Inactive') ? 'selected' : ''}} value="Inactive">Inactive</option>
                                     </select>
-                                </div>
+                                </div> --}}
                                 @else
                                 <input type="hidden" name="title" value="{{$popin->title}}" class="form-control" maxlength="50"
                                         placeholder="Eg. Explore Blog, Agent Post etc.">
@@ -103,12 +104,12 @@
                                 <input type="hidden" name="for_whom" value="{{$popin->for_whom}}">
                                 <input type="hidden" name="status" value="{{$popin->status}}">
                                 @endif
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label>Backgroud Color</label>
                                     <input type="color" name="bg_color" value="{{$popin->bg_color}}" class="form-control"
                                         placeholder="Background Color" required>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label>Button Color</label>
                                         <input type="color" name="btn_color" value="{{$popin->btn_color}}" class="form-control"
                                         placeholder="Button Color" required>
@@ -116,7 +117,7 @@
                                 <div class="col-md-12">&nbsp;</div>
                                 <div class="col-md-12">
                                     @php
-                                    if($user_plan){
+                                    if($user_plan && $popin->status != 'Most Liked'){
                                         $plan_designs = explode(',', $user_plan->designs);
                                     }else{
                                         $plan_designs = ['top','bottom','left','right','full_screen','top_right','bottom_right','top_left','bottom_left'];
