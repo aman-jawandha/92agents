@@ -42,7 +42,7 @@
                                     {{ session('success') }}
                                 </div>
                             @endif
-                            <form method="POST" action="{{ route('admin.update-popin') }}" enctype="multipart/form-data">
+                            <form method="POST" id="popin_form" action="{{ route('admin.update-popin') }}" enctype="multipart/form-data">
                                 <input type="hidden" name="popin_id" value="{{$popin->id}}">
                                 @csrf
                                 <div class="col-md-4">
@@ -71,8 +71,8 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label>Change Image</label>
-                                    <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp,image/*"
-                                        class="form-control" placeholder="Image">
+                                    <input type="file" name="image" id="fileInput" class="form-control" placeholder="Image">
+                                <span id="error-msg" style="color: red;"></span>
                                 </div>
                                 <div class="col-md-6">
                                     <label>Url</label>
@@ -182,5 +182,45 @@
 
     <script type="text/javascript">
         $('#summernote').summernote();
+
+let isFileValid = true;
+
+function validateFileInput() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    const errorMsg = document.getElementById('error-msg');
+    errorMsg.textContent = '';
+    isFileValid = true;
+
+    if (!file) {
+        return;
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const maxSize = 1 * 1024 * 1024;
+
+    if (!allowedTypes.includes(file.type)) {
+        errorMsg.textContent = 'Allowed file types are jpg, jpeg, png and webp.';
+        isFileValid = false;
+        return;
+    }
+
+    if (file.size > maxSize) {
+        errorMsg.textContent = 'Image must be less than 1MB.';
+        isFileValid = false;
+        return;
+    }
+}
+
+document.getElementById('fileInput').addEventListener('change', function () {
+    validateFileInput();
+});
+
+document.getElementById('popin_form').addEventListener('submit', function (e) {
+    validateFileInput();
+    if (!isFileValid) {
+        e.preventDefault();
+    }
+});
     </script>
 @stop
