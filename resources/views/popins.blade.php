@@ -25,7 +25,6 @@
         left: 0;
         width: 100%;
         padding: 15px;
-        text-align: center;
         animation: slideUp 0.5s ease-out forwards;
     }
     @keyframes slideUp {
@@ -68,7 +67,6 @@
         left: 0;
         width: 100%;
         padding: 15px;
-        text-align: center;
         animation: slideDown 0.5s ease-out forwards;
     }
     @keyframes slideDown {
@@ -119,10 +117,10 @@
         height: 100vh;
         padding: 40px;
         display: flex;
+        text-align: center;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        text-align: center;
         opacity: 0;
         animation: fadeIn 0.5s forwards;
     }
@@ -152,19 +150,19 @@
             @endif
             <p class="popin-close close_popin">✖</p>
         </div>
-        <div style="display:flex;align-items:center">
-            <div style="width:10%">
+        <div class="row">
+            <div class="col-md-2 text-center">
                 @if ($popin->image)
-                    <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="100px" alt="Image">
+                    <img style="margin-top:10px" src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="100px" alt="Image">
                 @endif
             </div>
-            <div style="width:75%;text-align:left">
+            <div class="col-md-8">
                 <h3>{{ $popin->heading }}</h3>
                 <div style="height:100px;overflow:hidden">{!! $popin->description !!}</div>
             </div>
-            <div style="width:10%">
+            <div class="col-md-2 text-center">
                 @if ($popin->url)
-                    <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }}">{{ $popin->title }}</a>
+                    <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">{{ $popin->title }}</a>
                 @endif
             </div>
         </div>
@@ -182,9 +180,9 @@
         </div>
         <h3 style="margin-top:30px">{{ $popin->heading }}</h3>
         @if ($popin->image)
-            <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="70%" style="margin:20px 0" alt="Image">
+            <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="70%" style="margin:20px 20px 0px 20px" alt="Image">
         @endif
-        <div style="margin:20px 0;height:150px;overflow:hidden">{!! $popin->description !!}</div>
+        <div style="margin:20px 0;height:240px;overflow:hidden">{!! $popin->description !!}</div>
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }}">{{ $popin->title }}</a>
         @endif
@@ -247,9 +245,9 @@
         </div>
         <h3 style="margin-top:30px">{{ $popin->heading }}</h3>
         @if ($popin->image)
-            <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="70%" style="margin:20px 0" alt="Image">
+            <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="70%" style="margin:20px 20px 0px 20px" alt="Image">
         @endif
-        <div style="margin:20px 0;height:150px;overflow:hidden">{!! $popin->description !!}</div>
+        <div style="margin:20px 0;height:240px;overflow:hidden">{!! $popin->description !!}</div>
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }}">{{ $popin->title }}</a>
         @endif
@@ -265,17 +263,19 @@
             @endif
             <p class="popin-close close_popin">✖</p>
         </div>
-        <div style="display:flex;align-items:center;justify-content:center">
+        <div class="row">
             @if ($popin->image)
-                <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="100px" alt="Image" style="margin-right:15px">
+            <div class="col-md-2 text-center">
+                <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="100px" alt="Image" style="margin-top:10px">
+            </div>
             @endif
-            <div style="text-align:left">
+            <div class="col-md-8">
                 <h3>{{ $popin->heading }}</h3>
                 <div style="height:100px;overflow:hidden">{!! $popin->description !!}</div>
             </div>
             @if ($popin->url)
-                <div style="margin-left:15px">
-                    <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }}">{{ $popin->title }}</a>
+                <div class="col-md-2 text-center">
+                    <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">{{ $popin->title }}</a>
                 </div>
             @endif
         </div>
@@ -348,8 +348,8 @@
                     <a href="{{ $popin->url }}" target="_blank" class="btn btn-light btn-lg mt-4" style="background-color:{{ $popin->btn_color }}">{{ $popin->title }}</a>
                 @endif
             </div>
-            <div class="col-md-7">
-                <div style="max-width:100%;margin:0 auto;height:80vh;overflow:hidden">{!! $popin->description !!}</div>
+            <div class="col-md-7 text-left">
+                <div style="max-width:100%;margin:0 auto;height:500px;overflow:hidden">{!! $popin->description !!}</div>
             </div>
             <div class="col-md-1"></div>
         </div>

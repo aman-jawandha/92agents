@@ -17,9 +17,13 @@
             <!--End Left Sidebar-->
             <!-- Profile Content -->
             <div class="col-md-9">
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                    <h1 class=" margin-bottom-40 pull-left">Update Advertisement</h1>
-                    <a href="{{ route('agent-advertisement') }}" class="btn-u margin-bottom-25">View Advertisements</a>
+                <div class="row">
+                    <div class="col-md-6">
+                    <h1 class="margin-bottom-15">Update Advertisement</h1>
+                    </div>
+                    <div class="col-md-6 text-right">
+                    <a href="{{ route('agent-advertisement') }}" class="btn-u margin-bottom-15">View Advertisements</a>
+                    </div>
                 </div>
                 @if (session('success'))
                     <p id="succes_alert"

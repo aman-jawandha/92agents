@@ -316,19 +316,19 @@
                                             id="terms_and_conditions-error"></p>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <button type="button" class="google-btn" id="google_signup_btn">
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <div class="btn-group">
+                                        <button type="button" class="google-btn" id="google_signup_btn">
                                         <img src="https://img.icons8.com/color/48/000000/google-logo.png"
                                             alt="Google Logo">
                                         <span>Continue with Google</span>
                                     </button>
-                                </div>
-                                <div class="col-md-6">
                                     <button type="button" class="facebook-btn" id="facebook_signup_btn">
                                         <img src="https://img.icons8.com/color/48/000000/facebook-new.png"
                                             alt="Facebook Logo">
                                         <span>Continue with Facebook</span>
                                     </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -559,18 +559,18 @@
                                 <span class="loginsignupbutton color-green cursor"></span> to registration
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <button type="button" class="google-btn" id="google_login_btn">
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                            <div class="btn-group">
+                                <button type="button" class="google-btn" id="google_login_btn">
                                 <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google Logo">
                                 <span>Continue with Google</span>
                             </button>
-                        </div>
-                        <div class="col-md-6">
                             <button type="button" class="facebook-btn" id="facebook_login_btn">
                                 <img src="https://img.icons8.com/color/48/000000/facebook-new.png"
                                     alt="Facebook Logo">
                                 <span>Continue with Facebook</span>
                             </button>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

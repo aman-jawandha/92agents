@@ -31,9 +31,11 @@
 
             <!-- Profile Content -->
             <div class="col-md-9">
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                <h1 class="margin-bottom-40">Welcome to your Dashboard.</h1>
-                <div class="margin-bottom-30">
+                <div class="row">
+                <div class="col-md-12">
+                <h1 class="margin-bottom-15">Welcome to your Dashboard.</h1>
+                </div>
+                <div class="col-md-12 margin-bottom-15">
                 <a href="{{route('agent-advertisement')}}" class="btn-u">Advertise Your Skills</a>
                 <a href="{{route('get-agent-rating',auth()->id())}}" class="btn-u">Ratings</a>
                 <a href="{{route('agent-points',auth()->id())}}" class="btn-u">Reward Points</a>
