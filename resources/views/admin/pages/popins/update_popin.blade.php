@@ -151,7 +151,7 @@
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" value="top" name="design"
                                             id="top" {{ ($popin->design == 'top') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="top">Top (Full Width)</label>
+                                        <label class="form-check-label" for="top">Top</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" value="full_screen" name="design"

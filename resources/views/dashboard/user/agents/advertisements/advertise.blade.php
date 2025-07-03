@@ -14,13 +14,15 @@
             <!--End Left Sidebar-->
             <!-- Profile Content -->
             <div class="col-md-9">
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                <h1 class=" margin-bottom-40 pull-left">Manage Advertisements</h1>
-                <div>
-                <a href="{{route('create-advrtismnt')}}" class="btn-u margin-bottom-25">Add Advertisement</a>
-                <a href="{{route('agent-adds-plans')}}" class="btn-u margin-bottom-25">View Plans</a>
+                <div class="row">
+                <div class="col-md-6">
+                <h1 class="margin-bottom-15">Manage Advertisements</h1>
                 </div>
-                </div>
+                <div class="col-md-6 text-right">
+                <a href="{{route('create-advrtismnt')}}" class="btn-u margin-bottom-15">Add Advertisement</a>
+                <a href="{{route('agent-adds-plans')}}" class="btn-u margin-bottom-15">View Plans</a>
+            </div>
+        </div>
                 @if (session('success'))
                     <p id="succes_alert" style="background-color: green; color: white; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center;">
                         <span>{{ session('success') }}</span>
@@ -38,9 +40,11 @@
             @foreach ($popins as $popin)
                 <div class="col-md-12" style="padding: 8px">
                     <div class="air-card box-shadow-profile" style="border-radius:10px;background-color: white !important">
-                        <div style="display:flex;align-items:center;justify-content:space-between">
+                        <div class="row">
+                        <div class="col-md-8">
                         <h3 style="color:#6ecd1b"><b>{{$popin->heading ?? 'Heading'}}</b></h3>
-                        <div>
+                        </div>
+                        <div class="col-md-4">
                             @if($popin->status == "Active")
                             <a href="{{ route('advrtismnt-change-status',$popin->id) }}" onclick="return confirm('Are you sure you want to change status of this advertisement?')" class="btn btn-success btn-sm" style="color:white !important;">{{$popin->status}}</a>
                             @elseif($popin->status == "Inactive")
@@ -54,7 +58,7 @@
                             <i class="fa fa-trash" style="color:white !important;"></i>
                         </a>
                         </div>
-                        </div>
+                    </div>
                         <hr style="margin:12px 0px 0px 0px">
                         <div style="max-height:150px;overflow-y:auto;padding-right:5px;">
                             <p style="margin:12px 0px">Description</p>

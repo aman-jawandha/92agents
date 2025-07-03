@@ -14,13 +14,15 @@
             <!--End Left Sidebar-->
             <!-- Profile Content -->
             <div class="col-md-9">
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                    <h1 class=" margin-bottom-40 pull-left">Rewarded Points History</h1>
-                    <div>
+                <div class="row">
+                    <div class="col-md-6">
+                    <h1 class="margin-bottom-15">Rewarded Points History</h1>
+                    </div>
+                    <div class="col-md-6 text-right">
                         <a href="{{ route('delete-points-history', auth()->id()) }}"
                             onclick="return confirm('Are you sure you want to clear history of points?')"
-                            class="btn-u margin-bottom-25">Clear History</a>
-                        <a href="{{ url('/dashboard') }}" class="btn-u margin-bottom-25">Back</a>
+                            class="btn-u">Clear History</a>
+                        <a href="{{ url('/dashboard') }}" class="btn-u margin-bottom-15">Back</a>
                     </div>
                 </div>
                 @if (session('success'))
