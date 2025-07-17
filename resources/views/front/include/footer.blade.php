@@ -312,8 +312,8 @@
                                                     class="color-green cursor signinurl"></span> to login your account.
                                             </p>
                                         </label>
-                                        <p class="error-text hide terms_and_conditions-error"
-                                            id="terms_and_conditions-error"></p>
+                                        <small class="error-text hide terms_and_conditions-error"
+                                            id="terms_and_conditions-error"></small>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-12 col-sm-12 col-xs-12">
@@ -719,19 +719,36 @@
         $('#slidetext').html(text);
     });
 
-    document.getElementById('google_signup_btn').addEventListener('click', function() {
+      function termsAndConditionsChecked() {
+        const termsCheckbox = document.querySelector('input[name="terms_and_conditions"]');
+
+        if (!termsCheckbox.checked) {
+            alert("Please accept the Terms and Conditions.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    document.getElementById('google_signup_btn').addEventListener('click', function () {
+        if (!termsAndConditionsChecked()) return;
+
         const roleId = document.querySelector('.users_role_id').value;
         const provider = 'google';
         window.location.href = `/auth/${provider}/${roleId}`;
     });
+
+    document.getElementById('facebook_signup_btn').addEventListener('click', function () {
+        if (!termsAndConditionsChecked()) return;
+
+        const roleId = document.querySelector('.users_role_id').value;
+        const provider = 'facebook';
+        window.location.href = `/auth/${provider}/${roleId}`;
+    });
+    
     document.getElementById('google_login_btn').addEventListener('click', function() {
         const roleId = document.querySelector('.agents_users_role_id').value;
         const provider = 'google';
-        window.location.href = `/auth/${provider}/${roleId}`;
-    });
-    document.getElementById('facebook_signup_btn').addEventListener('click', function() {
-        const roleId = document.querySelector('.users_role_id').value;
-        const provider = 'facebook';
         window.location.href = `/auth/${provider}/${roleId}`;
     });
     document.getElementById('facebook_login_btn').addEventListener('click', function() {

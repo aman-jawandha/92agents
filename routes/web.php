@@ -25,6 +25,7 @@ Route::any('/lang/{lg}', [Front\LangaugeController::class, 'index']);
 Route::controller(Administrator\Admin\PopinController::class)->group(function () {
     Route::get('/show-popin', 'show_popin')->name('show-popin');
     Route::get('/view-popin', 'view_popin')->name('view-popin');
+    Route::get('/popin-detail/{id}', 'popin_detail')->name('popin-detail');
 });
 
 /* ==================== Front\HomeController ==================== */
@@ -240,6 +241,8 @@ Route::middleware(['auth', 'lang', 'sTime', 'check-user-activation'])->group(fun
         Route::get('/delete-advrtismnt/{id}', 'delete_advrtismnt')->name('delete-advrtismnt');
         Route::get('/agent-points/{id}', 'agent_points')->name('agent-points');
         Route::get('/delete-points-history/{id}', 'delete_points_history')->name('delete-points-history');
+        Route::get('/payment-history/{id}', 'agent_payment_history')->name('agent-payment-history');
+        Route::get('/delete-payment-history/{id}', 'delete_payment_history')->name('delete-payment-history');
     });
 
 

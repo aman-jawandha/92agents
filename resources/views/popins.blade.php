@@ -163,9 +163,16 @@
             <div class="col-md-2 text-center">
                 @if ($popin->url)
                     <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">{{ $popin->title }}</a>
+                @else
+                    <a href="{{ route('popin-detail',$popin->id) }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">Read More</a>
                 @endif
             </div>
         </div>
+        @if(auth()->id() && (auth()->user()->agents_users_role_id == 2 || auth()->user()->agents_users_role_id == 3) && ($popin->get_user->details_id != 1))
+            <a href="{{url('/search/agents/details/' . $popin->get_user->details_id)}}"><h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6></a>
+        @else
+            <h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6>
+        @endif
     </div>
 {{-- Right --}}
 @elseif($popin->design == 'right')
@@ -180,11 +187,18 @@
         </div>
         <h3 style="margin-top:30px">{{ $popin->heading }}</h3>
         @if ($popin->image)
-            <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="70%" style="margin:20px 20px 0px 20px" alt="Image">
+            <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="40%" style="margin:20px 20px 0px 20px" alt="Image">
         @endif
         <div style="margin:20px 0;height:240px;overflow:hidden">{!! $popin->description !!}</div>
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }}">{{ $popin->title }}</a>
+        @else
+            <a href="{{ route('popin-detail',$popin->id) }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">Read More</a>
+        @endif
+        @if(auth()->id() && (auth()->user()->agents_users_role_id == 2 || auth()->user()->agents_users_role_id == 3) && ($popin->get_user->details_id != 1))
+            <a href="{{url('/search/agents/details/' . $popin->get_user->details_id)}}"><h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6></a>
+        @else
+            <h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6>
         @endif
     </div>
 {{-- Top‑Right --}}
@@ -207,6 +221,13 @@
         <div style="height:150px;overflow:hidden">{!! $popin->description !!}</div>
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="width:100%;background-color:{{ $popin->btn_color }};margin-top:10px">{{ $popin->title }}</a>
+        @else
+            <a href="{{ route('popin-detail',$popin->id) }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">Read More</a>
+        @endif
+        @if(auth()->id() && (auth()->user()->agents_users_role_id == 2 || auth()->user()->agents_users_role_id == 3) && ($popin->get_user->details_id != 1))
+            <a href="{{url('/search/agents/details/' . $popin->get_user->details_id)}}"><h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6></a>
+        @else
+            <h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6>
         @endif
     </div>
 {{-- Bottom‑Right --}}
@@ -228,8 +249,15 @@
         </div>
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="width:100%;background-color:{{ $popin->btn_color }};margin-bottom:10px">{{ $popin->title }}</a>
+        @else
+            <a href="{{ route('popin-detail',$popin->id) }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">Read More</a>
         @endif
         <div style="height:150px;overflow:hidden">{!! $popin->description !!}</div>
+        @if(auth()->id() && (auth()->user()->agents_users_role_id == 2 || auth()->user()->agents_users_role_id == 3) && ($popin->get_user->details_id != 1))
+            <a href="{{url('/search/agents/details/' . $popin->get_user->details_id)}}"><h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6></a>
+        @else
+            <h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6>
+        @endif
     </div>
 {{-- ================= NEW POSITIONS ================= */
 {{-- Left --}}
@@ -245,11 +273,18 @@
         </div>
         <h3 style="margin-top:30px">{{ $popin->heading }}</h3>
         @if ($popin->image)
-            <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="70%" style="margin:20px 20px 0px 20px" alt="Image">
+            <img src="{{ asset('uploads/popin_images/' . $popin->image) }}" width="40%" style="margin:20px 20px 0px 20px" alt="Image">
         @endif
         <div style="margin:20px 0;height:240px;overflow:hidden">{!! $popin->description !!}</div>
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }}">{{ $popin->title }}</a>
+        @else
+            <a href="{{ route('popin-detail',$popin->id) }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">Read More</a>
+        @endif
+       @if(auth()->id() && (auth()->user()->agents_users_role_id == 2 || auth()->user()->agents_users_role_id == 3) && ($popin->get_user->details_id != 1))
+            <a href="{{url('/search/agents/details/' . $popin->get_user->details_id)}}"><h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6></a>
+        @else
+            <h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6>
         @endif
     </div>
 {{-- Top (full‑width banner) --}}
@@ -277,8 +312,17 @@
                 <div class="col-md-2 text-center">
                     <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">{{ $popin->title }}</a>
                 </div>
+            @else
+                <div class="col-md-2 text-center">
+                    <a href="{{ route('popin-detail',$popin->id) }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">Read More</a>
+                </div>
             @endif
         </div>
+        @if(auth()->id() && (auth()->user()->agents_users_role_id == 2 || auth()->user()->agents_users_role_id == 3) && ($popin->get_user->details_id != 1))
+            <a href="{{url('/search/agents/details/' . $popin->get_user->details_id)}}"><h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6></a>
+        @else
+            <h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6>
+        @endif
     </div>
 {{-- Top‑Left --}}
 @elseif($popin->design == 'top_left')
@@ -300,6 +344,13 @@
         <div style="height:150px;overflow:hidden">{!! $popin->description !!}</div>
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="width:100%;background-color:{{ $popin->btn_color }};margin-top:10px">{{ $popin->title }}</a>
+        @else
+            <a href="{{ route('popin-detail',$popin->id) }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">Read More</a>
+        @endif
+        @if(auth()->id() && (auth()->user()->agents_users_role_id == 2 || auth()->user()->agents_users_role_id == 3) && ($popin->get_user->details_id != 1))
+            <a href="{{url('/search/agents/details/' . $popin->get_user->details_id)}}"><h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6></a>
+        @else
+            <h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6>
         @endif
     </div>
 {{-- Bottom‑Left --}}
@@ -321,8 +372,15 @@
         </div>
         @if ($popin->url)
             <a href="{{ $popin->url }}" target="_blank" class="btn btn-light" style="width:100%;background-color:{{ $popin->btn_color }};margin-bottom:10px">{{ $popin->title }}</a>
+        @else
+            <a href="{{ route('popin-detail',$popin->id) }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">Read More</a>
         @endif
         <div style="height:150px;overflow:hidden">{!! $popin->description !!}</div>
+        @if(auth()->id() && (auth()->user()->agents_users_role_id == 2 || auth()->user()->agents_users_role_id == 3) && ($popin->get_user->details_id != 1))
+            <a href="{{url('/search/agents/details/' . $popin->get_user->details_id)}}"><h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6></a>
+        @else
+            <h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6>
+        @endif
     </div>
 {{-- Full‑Screen --}}
 @elseif($popin->design == 'full_screen')
@@ -346,6 +404,8 @@
                     @endif
                 @if ($popin->url)
                     <a href="{{ $popin->url }}" target="_blank" class="btn btn-light btn-lg mt-4" style="background-color:{{ $popin->btn_color }}">{{ $popin->title }}</a>
+                @else
+                    <a href="{{ route('popin-detail',$popin->id) }}" target="_blank" class="btn btn-light" style="background-color:{{ $popin->btn_color }};margin-top:20px">Read More</a>
                 @endif
             </div>
             <div class="col-md-7 text-left">
@@ -353,5 +413,10 @@
             </div>
             <div class="col-md-1"></div>
         </div>
+        @if(auth()->id() && (auth()->user()->agents_users_role_id == 2 || auth()->user()->agents_users_role_id == 3) && ($popin->get_user->details_id != 1))
+            <a href="{{url('/search/agents/details/' . $popin->get_user->details_id)}}"><h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6></a>
+        @else
+            <h6 class="text-right" style="color:white !important">Posted By : {{$popin->get_user->name ?? 'N\A'}}</h6>
+        @endif
     </div>
 @endif

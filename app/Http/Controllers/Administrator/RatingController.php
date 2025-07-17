@@ -488,12 +488,27 @@ class RatingController extends Controller
                 $btn_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
                 $designs = ['top','bottom','left','right','full_screen','top_right','bottom_right','top_left','bottom_left'];
                 if ($blog) {
+                    $image = null;
+                if ($blog->image && file_exists(public_path("uploads/blog_images/{$blog->image}"))) {
+                    $filename = $blog->image;
+                    $sourcePath = public_path("uploads/blog_images/{$filename}");
+                    $destinationPath = public_path("uploads/popin_images/{$filename}");
+                    
+                    if (!file_exists($destinationPath)) {
+                        if (copy($sourcePath, $destinationPath)) {
+                            $image = $filename;
+                        }
+                    } else {
+                        $image = $filename;
+                    }
+                }
                     DB::table('popins')->insert([
                         'title' => 'Explore Blog',
                         'agent_id' => $blog->added_by,
                         'blog_id' => $blog_id,
                         'heading' => $blog->title,
                         'description' => $blog->description,
+                        'image' => $image,
                         'url' => $url,
                         'bg_color' => $bg_color,
                         'btn_color' => $btn_color,

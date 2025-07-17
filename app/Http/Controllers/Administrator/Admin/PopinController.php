@@ -39,6 +39,7 @@ class PopinController extends Controller
             'design' => $request->design,
             'status' => $request->status,
             'image' => $image,
+            'agent_id' => auth()->id(),
         ]);
         return redirect()->route('admin.popins')->with('success','Popin added successfully');
     }
@@ -128,5 +129,11 @@ public function view_popin(Request $req)
 {
     $popin = Popin::where('id', $req->popin_id)->first();
     return view('popins', compact('popin'))->render();
+}
+
+public function popin_detail($id)
+{
+    $popin = Popin::where('id', $id)->first();
+    return view('front.publicPage.popin_detail', compact('popin'));
 }
 }

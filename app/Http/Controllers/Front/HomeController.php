@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Userdetails;
+use App\Models\AgentRating;
 use App\Models\Post;
 use App\Models\State;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -23,17 +25,61 @@ class HomeController extends Controller
     public function index($stype = null)
     {
         $user = new User;
-        $view = [
-            'stype' => $stype,
-            'agents' => $user->getforeUsersByAnyonly(0, [
+        $view['stype'] = $stype;
+        $view['agents'] = $user->getforeUsersByAnyonly(0, [
                     'agents_users.agents_users_role_id' => '4',
                     'agents_users.is_deleted' => '0',
                     'agents_users.status' => '1'
-                ]
-            )
-        ];
+        ]);
+    $today = now();
 
-        return view('front.publicPage.index', $view);
+    $topRatedIds = AgentRating::where('rating', 5)
+        ->select('rating_for', DB::raw('COUNT(*) as five_star_count'))
+        ->groupBy('rating_for')
+        ->having('five_star_count', '>=', 20)
+        ->orderByDesc('five_star_count')
+        ->limit(10)
+        ->pluck('rating_for')
+        ->toArray();
+
+    $topRatedAgents = User::with('details')
+        ->whereIn('id', $topRatedIds)
+        ->get()
+        ->map(function ($agent) {
+        $agent->tag = 'Recommended';
+        return $agent;
+    });
+
+    $planAgents = User::with('details')
+        ->join('user_plans', 'user_plans.user_id', '=', 'agents_users.id')
+        ->where('user_plans.start_date', '<=', $today)
+        ->where('user_plans.end_date', '>=', $today)
+        ->select('agents_users.*')
+        ->distinct()
+        ->get()
+        ->map(function ($agent) {
+        $agent->tag = 'Sponsored';
+        return $agent;
+    });
+
+    $combinedAgents = $topRatedAgents->concat($planAgents)->shuffle()->values();
+
+    $page = request()->get('page', 1);
+    $perPage = 8;
+
+    $agents = new LengthAwarePaginator(
+        $combinedAgents->forPage($page, $perPage),
+        $combinedAgents->count(),
+        $perPage,
+        $page,
+        ['path' => request()->url(), 'query' => request()->query()]
+    );
+
+    if (request()->ajax()) {
+    return view('front.publicPage.featured_agents', compact('agents'))->render();
+    }else{
+        return view('front.publicPage.index',compact('view','agents'));
+    }
     }
 
     public function blogs()
@@ -490,6 +536,7 @@ class HomeController extends Controller
                 'blog.id',
                 'blog.title',
                 'blog.description',
+                'blog.image',
                 'blog.created_date',
                 'blog.view',
                 'cat.cat_name',

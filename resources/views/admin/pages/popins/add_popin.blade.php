@@ -64,7 +64,7 @@
                                         <span id="error-msg" style="color: red;"></span>
                                 </div>
                                 <div class="col-md-6">
-                                    <label>Url</label>
+                                    <label>Redirect Url</label>
                                     <input type="url" name="url" class="form-control" maxlength="250"
                                         placeholder="Add url to show button">
                                 </div>
