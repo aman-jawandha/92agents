@@ -60,7 +60,7 @@
                         <tr>
                           <td>{{ date('d-m-Y', strtotime($blog->created_date)) }}</td>
                           <td>{{ $blog->title}}</td>
-                          <td><?php echo $blog->description ?></td>
+                          <td>{{ substr(strip_tags($blog->description), 0, 100) }}</td>
                           
                           <td> 
                             @if($blog->status==0)
@@ -71,6 +71,7 @@
                             
                             </td>
                           <td>
+                              <a target="_blank" href="{{ url('/blogs') }}/{{ $blog->id }}/{{ $blog->title }}"><button class="btn btn-success">View</button></a>
                               <a href="{{ url('agentadmin/blog/editblog/'.$blog->id) }}"><button class="btn btn-warning">Edit</button></a>
                           </td>
                         </tr>

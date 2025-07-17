@@ -9,6 +9,7 @@
 
 @section('content')
     <?php $topmenu = 'Agents'; ?>
+    <?php $activemenu = 'Ratings';?>
 
     @include('dashboard.include.sidebar')
 

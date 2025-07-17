@@ -65,7 +65,7 @@
                                 <span id="error-msg" style="color: red;"></span>
                             </div>
                             <div class="col-md-6">
-                                <label>Url</label>
+                                <label>Redirect Url</label>
                                 <input type="url" name="url" class="form-control" maxlength="250"
                                     placeholder="Add url to show button">
                             </div>
@@ -99,7 +99,11 @@
                             <div class="col-md-12">&nbsp;</div>
                             <div class="col-md-12">
                                  @php
+                                 if($user_plan){
                                     $plan_designs = explode(',', $user_plan->designs);
+                                 }else{
+                                    $plan_designs = ['top','bottom','left','right','full_screen','top_right','bottom_right','top_left','bottom_left'];
+                                }
                                 @endphp
                                 <label>Choose Pop-in Design</label>
                                 @if(in_array('top_right', $plan_designs))

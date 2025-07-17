@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class BlogController extends Controller
 {
@@ -39,62 +40,83 @@ class BlogController extends Controller
         }
     }
 
-    /* For check agent status */
-    public function blogstore(Request $request)
-    {
-        $user = Auth::user();
-        $id = $user->id;
-        $data = $request->except('_token', 'files');
+   public function blogstore(Request $request)
+{
+    $user = Auth::user();
+    $id = $user->id;
+    $data = $request->except('_token', 'files');
 
-        $data['added_by'] = $id;
-        $data['status'] = 1;
-        $blog_id = DB::table('agents_blog')->insertGetId($data);
+    $filename = null;
 
-        $url = url('/blogs') .'/'. $blog_id .'/'. $request->title;
-        $bg_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
-        $btn_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+    // Handle image upload once and copy it
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = $file->getClientOriginalName();
 
-        $user_plan = DB::table('user_plans')->where('user_id',auth()->id())->first();
+        $blogPath = public_path('uploads/blog_images');
+        $popinPath = public_path('uploads/popin_images');
 
-        $status = 'Inactive';
-        $designs = ['top','bottom','left','right','full_screen','top_right','bottom_right','top_left','bottom_left'];
-        if($user_plan && $user_plan->start_date <= date('Y-m-d') && $user_plan->end_date >= date('Y-m-d')){
-        $designs = explode(',',$user_plan->designs);
-        $user_popins = Popin::where('agent_id',auth()->id())->where('status','Active')->count();
-        if($user_plan->no_of_popins > $user_popins){
+        if (!File::exists($blogPath)) File::makeDirectory($blogPath, 0755, true);
+        if (!File::exists($popinPath)) File::makeDirectory($popinPath, 0755, true);
+
+        $file->move($blogPath, $filename);
+        File::copy($blogPath . '/' . $filename, $popinPath . '/' . $filename);
+
+        $data['image'] = $filename;
+    }
+
+    $data['added_by'] = $id;
+    $data['status'] = 1;
+
+    $blog_id = DB::table('agents_blog')->insertGetId($data);
+
+    // Prepare popin data
+    $url = url('/blogs') . '/' . $blog_id . '/' . $request->title;
+    $bg_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+    $btn_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+    $status = 'Inactive';
+
+    $user_plan = DB::table('user_plans')
+        ->where('user_id', $id)
+        ->whereDate('start_date', '<=', now())
+        ->whereDate('end_date', '>=', now())
+        ->first();
+
+    $designs = ['top', 'bottom', 'left', 'right', 'full_screen', 'top_right', 'bottom_right', 'top_left', 'bottom_left'];
+    if ($user_plan) {
+        $designs = explode(',', $user_plan->designs);
+        $activePopins = Popin::where('agent_id', $id)->where('status', 'Active')->count();
+        if ($user_plan->no_of_popins > $activePopins) {
             $status = 'Active';
         }
-        }
-        if($blog_id && auth()->user()->agents_users_role_id == '4'){
-            $popin = Popin::create([
+    }
+
+    if ($blog_id && $user->agents_users_role_id == '4') {
+        Popin::create([
             'for_whom' => 'All',
             'title' => 'Explore Blog',
             'heading' => $request->title,
             'description' => $request->description,
+            'image' => $filename,
             'url' => $url,
             'bg_color' => $bg_color,
             'btn_color' => $btn_color,
             'design' => $designs[array_rand($designs)],
             'status' => $status,
-            'agent_id' => auth()->id(),
+            'agent_id' => $id,
             'blog_id' => $blog_id,
         ]);
 
-        $points = DB::table('agents_users')->where('id', auth()->id())->increment('points', 5);
-        $points_history = DB::table('agent_points_history')->insert([
-            'agent_id' => auth()->id(),
+        DB::table('agents_users')->where('id', $id)->increment('points', 5);
+        DB::table('agent_points_history')->insert([
+            'agent_id' => $id,
             'plus_points' => 5,
             'points_for' => 'For posting a blog',
         ]);
-        }
-        $category = DB::table('agents_category')->select('*')->get();
-        $view['user'] = $user = Auth::user();
-        $view['userdetails'] = $userdetails = Userdetails::find($user->id);
-        $view['user_type'] = env('user_role_' . $user->agents_users_role_id);
-        $view['category'] = DB::table('agents_category')->select('*')->get();
-        $view['blogs'] = DB::table('agents_blog')->join('agents_category', 'agents_blog.cat_id', '=', 'agents_category.id')->where('added_by', '=', $user->id)->get();
-        return redirect('/buyer/blog');
     }
+
+    return redirect('/buyer/blog');
+}
 
     public function advertisement()
     {
@@ -140,27 +162,54 @@ class BlogController extends Controller
             // echo json_encode($res);
     }
 
-
-
     public function singleBlogUpdate(Request $request)
-    {
-        $data = $request->except('_token', 'files');
-        $id = $data['id'];
-        unset($data['id']);
+{
+    $data = $request->except('_token', 'files');
+    $id = $data['id'];
+    unset($data['id']);
 
-        $result = DB::table('agents_blog')->where('id', '=', $id)->update($data);
-        if ($result) {
-            $url = url('/blogs') .'/'. $id .'/'. $request->title;
-                $popin = Popin::where('blog_id',$id)->where('agent_id',auth()->id())->update([
-                'heading' => $request->title,
-                'description' => $request->description,
-                'url' => $url,
-            ]);
-            echo 1;
-        } else {
-            echo 0;
-        }
+    $filename = null;
+
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = $file->getClientOriginalName();
+
+        $blogPath = public_path('uploads/blog_images');
+        $popinPath = public_path('uploads/popin_images');
+
+        if (!File::exists($blogPath)) File::makeDirectory($blogPath, 0755, true);
+        if (!File::exists($popinPath)) File::makeDirectory($popinPath, 0755, true);
+
+        $file->move($blogPath, $filename);
+
+        File::copy($blogPath . '/' . $filename, $popinPath . '/' . $filename);
+
+        $data['image'] = $filename;
     }
+    $result = DB::table('agents_blog')->where('id', $id)->update($data);
+
+    if ($result) {
+        $url = url('/blogs') . '/' . $id . '/' . $request->title;
+
+        $popinData = [
+            'heading' => $request->title,
+            'description' => $request->description,
+            'url' => $url,
+        ];
+
+        if ($filename) {
+            $popinData['image'] = $filename;
+        }
+
+        Popin::where('blog_id', $id)
+            ->where('agent_id', auth()->id())
+            ->update($popinData);
+
+        echo 1;
+    } else {
+        echo 0;
+    }
+}
 
     public function delblog($id)
     {

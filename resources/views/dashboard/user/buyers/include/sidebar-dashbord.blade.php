@@ -38,7 +38,16 @@
 		</li>
 		@if($user->agents_users_role_id==4)
 		<li class="list-group-item1 border1-bottom <?php if(@$activemenu=='Advertise'): ?> active <?php endif; ?>">
-			<a id="AgentsQUESTIONSture" href="{{url('/buyer/advertisement')}}" ><i class="fa fa-question-circle"></i> Advertise</a>
+			<a id="AgentsQUESTIONSture" href="{{route('agent-advertisement')}}" ><i class="fa fa-bullhorn"></i> Advertise</a>
+		</li>
+		<li class="list-group-item1 border1-bottom <?php if(@$activemenu=='Ratings'): ?> active <?php endif; ?>">
+			<a id="AgentsQUESTIONSture" href="{{route('get-agent-rating',auth()->user()->id)}}" ><i class="fa fa-star"></i> Ratings</a>
+		</li>
+		<li class="list-group-item1 border1-bottom <?php if(@$activemenu=='Points'): ?> active <?php endif; ?>">
+			<a id="AgentsQUESTIONSture" href="{{route('agent-points',auth()->user()->id)}}" ><i class="fa fa-trophy"></i> Reward Points</a>
+		</li>
+		<li class="list-group-item1 border1-bottom <?php if(@$activemenu=='Payments'): ?> active <?php endif; ?>">
+			<a id="AgentsQUESTIONSture" href="{{route('agent-payment-history',auth()->user()->id)}}" ><i class="fa fa-dollar"></i> Payment History</a>
 		</li>
 		@endif
 	</ul>

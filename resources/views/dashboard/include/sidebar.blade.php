@@ -229,8 +229,24 @@
                                     <li class="{{ @$activemenu == 'Bookmark' ? 'active' : '' }}"><a
                                             href="{{ url('/' . str_replace(' ', '', $user->details->name) . '/bookmark/') }}">Bookmark</a>
                                     </li>
-
-                                    <!--<li class="{{ @$activemenu == 'proposal' ? 'active' : '' }}"><a href="{{ url('/profile/' . str_replace(' ', '', $user->details->name) . '/proposal/') }}">Proposals</a></li>-->
+                                    <li class="{{ @$activemenu == 'Blog' ? 'active' : '' }}"><a
+                                            href="{{ url('buyer/blog') }}">Blogs</a>
+                                    </li>
+                                    <li class="{{ @$activemenu == 'Questions' ? 'active' : '' }}"><a
+                                            href="{{ url('/profile/agent/questions') }}">Questions</a>
+                                    </li>
+                                    <li class="{{ @$activemenu == 'Advertise' ? 'active' : '' }}"><a
+                                            href="{{ route('agent-advertisement') }}">Advertise</a>
+                                    </li>
+                                    <li class="{{ @$activemenu == 'Ratings' ? 'active' : '' }}"><a
+                                            href="{{ route('get-agent-rating',auth()->user()->id) }}">Ratings</a>
+                                    </li>
+                                    <li class="{{ @$activemenu == 'Points' ? 'active' : '' }}"><a
+                                            href="{{ route('agent-points',auth()->user()->id) }}">Rewarded Points</a>
+                                    </li>
+                                    <li class="{{ @$activemenu == 'Payments' ? 'active' : '' }}"><a
+                                            href="{{ route('agent-payment-history',auth()->user()->id) }}">Payment History</a>
+                                    </li>  
                                 @endif
 
                                 @if ($user->agents_users_role_id != 4)

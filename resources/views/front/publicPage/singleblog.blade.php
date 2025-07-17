@@ -38,23 +38,36 @@
                 
                 <div class="row">
                     <div class="posts-block col-lg-8 col-md-8 col-sm-8 col-xs-12 margin-bottom60">
-                        <h4><i class="fa fa-user"></i> {{ $detail->name }} ({{ $detail->role_name }})
-                            &nbsp; &nbsp; <i class="fa fa-calendar"></i> {{ date('d-m-Y', strtotime($detail->created_date)) }} &nbsp; &nbsp;
-                            @if($detail->role_name == 'agent')<span><a href="{{route('get-agent-rating',$detail->details_id)}}" style="font-size:20px" class="badge">Rate Agent</a></span>@endif
-                        </h4>
+                        <div class="row">
+                                    <div class="col-md-9">
+                                        <h4><i class="fa fa-user"></i> {{ $detail->name }} ({{ $detail->role_name }})@if($detail->role_name == 'agent')<span><a href="{{route('get-agent-rating',$detail->details_id)}}" style="font-size:20px;margin:10px" class="badge">Rate Agent</a></span>@endif</h4>
+                                    <h5><i class="fa fa-calendar"></i> {{ date('m-d-Y', strtotime($detail->created_date)) }}</h5>
+                                    </div>  
+                                    <div class="col-md-3">
+                                        @if ($detail->image)
+                                            <img src="{{ asset('uploads/blog_images/' . $detail->image) }}" width="100%" alt="Image">
+                                        @endif
+                                    </div>
+                                </div>
                         <?php echo $detail->description ?>
                         <hr>
                         <button type="button" class="btn btn-success" onclick="$('#comment_modal').modal('show')">Add Comment</button>
                         <hr>
-                        <h3>User Comments:</h3>
+                        <h4>User Comments:</h4>
                         <div class="showcomment">
-                            <ul style="list-style: none;">
+                            <div class="row">
                                 @foreach($comment as $comm)
-                                <li><i class="fa fa-user"></i> <b>{{ $comm->email }}</b>&nbsp; &nbsp; &nbsp; &nbsp; <i class="fa fa-calendar"></i> <b>{{ $comm->com_date }}</b><br>
-                                    {!! nl2br(e($comm->comment)) !!}
-                                </li><br>
+                                <div class="col-md-6">
+                                    <i class="fa fa-user"></i> <b>{{ $comm->email }}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <i class="fa fa-calendar"></i> <b>{{ date('m-d-Y | H:i:s',strtotime($comm->com_date)) }}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <b>Comment :</b> {!! nl2br(e($comm->comment)) !!}
+                                </div>
                                 @endforeach
-                            </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="posts-block col-lg-4 col-md-4 col-sm-4 col-xs-12">

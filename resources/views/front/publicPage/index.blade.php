@@ -374,6 +374,9 @@
 						</div>
 					</div>
 				</div>
+				<div id="agents-wrapper">
+					@include('front.publicPage.featured_agents', ['agents' => $agents])
+				</div>
 			</div>
 		</div>
 	</section>
@@ -477,5 +480,28 @@
 		}
 	});
 </script>
+<script>
+$(document).on('click', '.pagination a, nav[role="navigation"] a', function (e) {
+    e.preventDefault();
+    const url = $(this).attr('href');
+    fetchAgents(url);
+});
 
+function fetchAgents(url) {
+    $.ajax({
+        url: url,
+        type: 'GET',
+        beforeSend: function () {
+            $('#agents-wrapper').html('<div class="text-center my-4">Loading...</div>');
+        },
+        success: function (data) {
+            $('#agents-wrapper').html(data);
+            history.pushState(null, '', url);
+        },
+        error: function () {
+            alert('Failed to load agents. Please try again.');
+        }
+    });
+}
+</script>
 @endsection

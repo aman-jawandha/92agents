@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Popin;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\File;
 
 class EmployeeController extends Controller
 {
@@ -98,21 +99,37 @@ class EmployeeController extends Controller
     }
 
     public function blogstore(Request $request)
-    {
-        $data = $request->except('_token', 'files');
-        $data['status'] = 1;
-        $id = DB::table('agents_blog')->insertGetId($data);
-        $url = url('/blogs') .'/'. $id .'/'. $request->title;
-        $bg_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
-        $btn_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
-        $designs = ['top','bottom','left','right','full_screen','top_right','bottom_right','top_left','bottom_left'];
-        if($id){
-            $popin = Popin::create([
+{
+    $data = $request->except('_token', 'files');
+    $data['status'] = 1;
+    $filename = null;
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = $file->getClientOriginalName();
+        $blogPath = public_path('uploads/blog_images');
+        $popinPath = public_path('uploads/popin_images');
+        if (!File::exists($blogPath)) File::makeDirectory($blogPath, 0755, true);
+        if (!File::exists($popinPath)) File::makeDirectory($popinPath, 0755, true);
+        $file->move($blogPath, $filename);
+        File::copy($blogPath . '/' . $filename, $popinPath . '/' . $filename);
+        $data['image'] = $filename;
+    } else {
+        $data['image'] = null;
+    }
+
+    $id = DB::table('agents_blog')->insertGetId($data);
+    $url = url('/blogs') . '/' . $id . '/' . $request->title;
+    $bg_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+    $btn_color = sprintf("#%06X", mt_rand(0, 0xFFFFFF));
+    $designs = ['top','bottom','left','right','full_screen','top_right','bottom_right','top_left','bottom_left'];
+    if ($id) {
+        Popin::create([
             'for_whom' => 'All',
             'title' => 'Explore Blog',
             'heading' => $request->title,
             'description' => $request->description,
             'url' => $url,
+            'image' => $filename,
             'bg_color' => $bg_color,
             'btn_color' => $btn_color,
             'design' => $designs[array_rand($designs)],
@@ -120,10 +137,14 @@ class EmployeeController extends Controller
             'blog_id' => $id,
             'agent_id' => auth()->id(),
         ]);
-        }
-        $category = DB::table('agents_category')->select('*')->get();
-        return view('admin.pages.blog.addblog', ['success' => 'Blog Added Successfuly', 'category' => $category]);
     }
+
+    $category = DB::table('agents_category')->select('*')->get();
+    return view('admin.pages.blog.addblog', [
+        'success' => 'Blog Added Successfully',
+        'category' => $category
+    ]);
+}
 
     public function bloglist()
     {
@@ -152,31 +173,64 @@ class EmployeeController extends Controller
         return view('admin.pages.blog.editblog', ['blog' => $employeelist, 'category' => $category]);
     }
 
-    public function updateblog(Request $request)
-    {
-        $id = $request->input('id');
-        $data['title'] = $request->input('title');
-        $data['description'] = $request->input('description');
-        $data['cat_id'] = $request->input('cat_id');
+   public function updateblog(Request $request)
+{
+    $id = $request->input('id');
+    $data = [
+        'title' => $request->input('title'),
+        'description' => $request->input('description'),
+        'cat_id' => $request->input('cat_id'),
+    ];
 
-        $query = DB::table('agents_blog')->where('id', '=', $id)->update($data);
-        if ($query == 1) {
-            $popin = Popin::where('blog_id',$id)->first();
-            $url = url('/blogs') .'/'. $id .'/'. $request->title;
-        if($popin){
-            $popin = Popin::where('blog_id',$id)->update([
-            'heading' => $request->title,
-            'description' => $request->description,
-            'url' => $url,
-            ]);
-        }
-            $employeelist = DB::table('agents_blog')->select('*')->get();
-            return view('admin.pages.blog.bloglist', ['bloglist' => $employeelist, 'success' => 'ok']);
-        } else {
-            $employeelist = DB::table('agents_blog')->select('*')->get();
-            return view('admin.pages.blog.bloglist', ['bloglist' => $employeelist, 'success' => 'no']);
-        }
+    $filename = null;
+
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = $file->getClientOriginalName();
+
+        $blogPath = public_path('uploads/blog_images');
+        $popinPath = public_path('uploads/popin_images');
+
+        if (!File::exists($blogPath)) File::makeDirectory($blogPath, 0755, true);
+        if (!File::exists($popinPath)) File::makeDirectory($popinPath, 0755, true);
+
+        $file->move($blogPath, $filename);
+        File::copy($blogPath . '/' . $filename, $popinPath . '/' . $filename);
+
+        $data['image'] = $filename;
     }
+
+    $query = DB::table('agents_blog')->where('id', $id)->update($data);
+
+    if ($query) {
+        $popin = Popin::where('blog_id', $id)->first();
+        $url = url('/blogs') . '/' . $id . '/' . $request->title;
+
+        if ($popin) {
+            $popinData = [
+                'heading' => $request->title,
+                'description' => $request->description,
+                'url' => $url,
+            ];
+            if ($filename) {
+                $popinData['image'] = $filename;
+            }
+            $popin->update($popinData);
+        }
+
+        $employeelist = DB::table('agents_blog')->select('*')->get();
+        return view('admin.pages.blog.bloglist', [
+            'bloglist' => $employeelist,
+            'success' => 'ok'
+        ]);
+    } else {
+        $employeelist = DB::table('agents_blog')->select('*')->get();
+        return view('admin.pages.blog.bloglist', [
+            'bloglist' => $employeelist,
+            'success' => 'no'
+        ]);
+    }
+}
 
     public function catlist()
     {

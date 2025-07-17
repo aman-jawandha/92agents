@@ -41,6 +41,9 @@
                     <div class="air-card box-shadow-profile" style="border-radius:10px;background-color: white !important">
                         <h3 style="color:#6ecd1b"><b>{{$plan->title}}</b></h3>
                         <h6><b>${{$plan->price}} \ {{$plan->duration}} months \  Adds allowed : {{$plan->no_of_popins}}</b></h6>
+                        @if($user_plan && $user_plan->plan_id == $plan->id && $user_plan->start_date <= date('Y-m-d') && $user_plan->end_date >= date('Y-m-d'))
+                        <small>Subscription : {{date('m-d-Y',strtotime($user_plan->start_date))}} - {{date('m-d-Y',strtotime($user_plan->end_date))}}</small>
+                        @endif
                         <hr style="margin:12px 0px 0px 0px">
                         <div style="height:225px;overflow-y:auto;padding-right:5px;">
                             <p style="margin:12px 0px">Description</p>

@@ -82,10 +82,23 @@ class AdvertiseController extends Controller
                 'user_role' => auth()->user()->agents_users_role_id,
             ]);
 
+            $start_date = Carbon::today()->toDateString();
+            $end_date = Carbon::today()->addMonths($plan->duration)->toDateString();
+
+            $payment_history = DB::table('payment_history')->insert([
+                'payment_id' => $paymentId,
+                'user_id' => $agentId,
+                'payment_status' => $status,
+                'amount' => $amount,
+                'payment_for' => $plan->title,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'duration' => $plan->duration,
+                'designs' => $plan->designs,
+                'no_of_popins' => $plan->no_of_popins,
+            ]);
+
     if ($status === 'success') {
-        $start_date = Carbon::today()->toDateString();
-        $end_date = Carbon::today()->addMonths($plan->duration)->toDateString();
-        
             $user_plan = DB::table('user_plans')->updateOrInsert(
             ['user_id' => $agentId],
             [
@@ -248,6 +261,16 @@ class AdvertiseController extends Controller
 
     public function delete_points_history($id){
         $popin = DB::table('agent_points_history')->where('agent_id',$id)->delete();
+        return redirect()->back()->with('success','History deleted successfully.');
+    }
+
+    public function agent_payment_history($id){
+        $payments = DB::table('payment_history')->where('user_id',auth()->user()->id)->paginate(10);
+        return view('dashboard.user.agents.advertisements.payments',compact('payments'));
+    }
+
+     public function delete_payment_history($id){
+        $popin = DB::table('payment_history')->where('user_id',$id)->delete();
         return redirect()->back()->with('success','History deleted successfully.');
     }
 }

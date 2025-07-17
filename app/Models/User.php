@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Userdetails;
+use App\Models\AgentRating;
 
 use App\Events\eventTrigger;
 
@@ -84,6 +86,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(Userdetails::class, 'details_id', 'id');
     }
+
+    public function ratings()
+    {
+        return $this->hasMany(AgentRating::class, 'rating_for', 'id');
+    }
+
 
 
     /**

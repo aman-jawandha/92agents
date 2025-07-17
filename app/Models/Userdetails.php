@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class Userdetails extends Model
 {
@@ -306,5 +307,10 @@ class Userdetails extends Model
     public function state()
     {
         return $this->hasOne(State::class, 'state_id', 'state_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'details_id', 'id');
     }
 }
