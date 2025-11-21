@@ -98,7 +98,50 @@
 			</div>
 		</div>
 	</section>
+	<section id="agents">
+		<hr style="text-align:left;margin-left:0">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="azservice">
+						<div class="img_icon">
+							<span class="icon-img">
+								<img src="{{ asset('/img/user.png') }}" alt="">
+							</span>
+						</div>
+						<div>
+							<h2>Our Agents</h2>
+							<p>We regularly updates on our Agents. Feel free to join with our Agents!</p>
+						</div>
+					</div>
+				</div>
 
+				<div class="row">
+					<div class="col-4 col-lg-4 col-md-4 col-sm-4">
+						<div class="team">
+							<img src="{{ asset('img/agent1.jpg') }}" alt="">
+							<span class="team_role">Buyer/FSBO expert</span>
+						</div>
+					</div>
+					<div class="col-4 col-lg-4 col-md-4 col-sm-4">
+						<div class="team">
+							<img src="{{ asset('img/agent2.png') }}" alt="">
+							<span class="team_role">Seller/Expired listing expert</span>
+						</div>
+					</div>
+					<div class="col-4 col-lg-4 col-md-4 col-sm-4">
+						<div class="team">
+							<img src="{{ asset('img/agent3.jpg') }}" alt="">
+							<span class="team_role">Foreclosure/Short Sale expert</span>
+						</div>
+					</div>
+				</div>
+				<div id="agents-wrapper">
+					@include('front.publicPage.featured_agents', ['agents' => $agents])
+				</div>
+			</div>
+		</div>
+	</section>
 	<section id="offer">
 		<hr style="text-align:left;margin-left:0">
 		<div class="container">
@@ -333,51 +376,6 @@
 			</div>
 
 			<a class="read_more text-center d-block my-3 read_more" data-toggle="modal" data-target="#registrationModal" style="cursor: pointer">Sign Up</a>
-		</div>
-	</section>
-
-	<section id="agents">
-		<hr style="text-align:left;margin-left:0">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="azservice">
-						<div class="img_icon">
-							<span class="icon-img">
-								<img src="{{ asset('/img/user.png') }}" alt="">
-							</span>
-						</div>
-						<div>
-							<h2>Our Agents</h2>
-							<p>We regularly updates on our Agents. Feel free to join with our Agents!</p>
-						</div>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-4 col-lg-4 col-md-4 col-sm-4">
-						<div class="team">
-							<img src="{{ asset('img/agent1.jpg') }}" alt="">
-							<span class="team_role">Buyer/FSBO expert</span>
-						</div>
-					</div>
-					<div class="col-4 col-lg-4 col-md-4 col-sm-4">
-						<div class="team">
-							<img src="{{ asset('img/agent2.png') }}" alt="">
-							<span class="team_role">Seller/Expired listing expert</span>
-						</div>
-					</div>
-					<div class="col-4 col-lg-4 col-md-4 col-sm-4">
-						<div class="team">
-							<img src="{{ asset('img/agent3.jpg') }}" alt="">
-							<span class="team_role">Foreclosure/Short Sale expert</span>
-						</div>
-					</div>
-				</div>
-				<div id="agents-wrapper">
-					@include('front.publicPage.featured_agents', ['agents' => $agents])
-				</div>
-			</div>
 		</div>
 	</section>
 

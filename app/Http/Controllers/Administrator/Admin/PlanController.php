@@ -23,6 +23,7 @@ class PlanController extends Controller
             return redirect()->back()->with('error','Please select atleast one design!')->withInput();
         }
         $plan = Plan::create([
+            'owner_id' => auth()->user()->owner_id,
             'title' => $req->title,
             'description' => $req->description,
             'price' => $req->price,

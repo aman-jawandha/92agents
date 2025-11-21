@@ -436,13 +436,34 @@ class RatingController extends Controller
     }
 
     public function get_agent_rating($id){
+        $authUser = auth()->user()->id;
         $rating = AgentRating::where('rating_by',auth()->user()->id)->where('rating_for',$id)->first();
         $ratings = AgentRating::where('rating_for',$id)->orderBy('id', 'desc')->paginate(12);
         $agent = DB::table('agents_users_details')->where('details_id',$id)->first();
         $ratingStats = AgentRating::where('rating_for', $id)
         ->selectRaw('COUNT(*) as total, AVG(rating) as average')
         ->first();
-        return view('dashboard.user.search.agent_rating',compact('ratings','agent','rating','ratingStats'));
+        $conversation = DB::table('agents_conversation')
+        ->where(function ($q) use ($authUser, $id) {
+            $q->where('sender_id', $authUser)
+              ->where('receiver_id', $id);
+        })
+        ->orWhere(function ($q) use ($authUser, $id) {
+            $q->where('sender_id', $id)
+              ->where('receiver_id', $authUser);
+        })
+        ->first();
+        $applied_posts = DB::table('agents_posts')->where('agents_user_id',$authUser)->where('applied_user_id',$id)->first();
+        
+        $userPosts = DB::table('agents_posts')
+        ->where('agents_user_id', $authUser)
+        ->pluck('post_id');
+
+        $selldetails = DB::table('agents_selldetails')
+            ->where('agent_id', $id)
+            ->whereIn('post_id', $userPosts)
+            ->first();
+        return view('dashboard.user.search.agent_rating',compact('ratings','agent','rating','ratingStats','conversation','applied_posts','selldetails'));
     }
 
     public function delete_agent_rating($agent_id){

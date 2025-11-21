@@ -76,54 +76,75 @@ class PopinController extends Controller
     }
 
     public function show_popin(Request $request)
-    {
-        $userRoleId = auth()->user()->agents_users_role_id;
+{
+    $userRoleId = auth()->user()->agents_users_role_id;
+    $today = date('Y-m-d');
 
-        $previousTime = session('previous_popin_time') 
-            ? Carbon::parse(session('previous_popin_time')) 
-            : null;
+    $previousTime = session('previous_popin_time')
+        ? Carbon::parse(session('previous_popin_time'))
+        : null;
 
-        if (!$previousTime || now()->greaterThanOrEqualTo($previousTime->addMinutes(10))) {
+    // 1. Get agent IDs with active plans
+    $activePlanAgentIds = DB::table('user_plans')
+        ->where('start_date', '<=', $today)
+        ->where('end_date', '>=', $today)
+        ->pluck('user_id');
 
-            if (session('previous_popin_id')) {
-                $popin = Popin::where(function ($q) {
-                        $q->where('status', 'Active')->orWhere('status', 'Most Liked');
-                    })
-                    ->whereIn('for_whom', [$userRoleId, 'All'])
-                    ->where('id', '<', session('previous_popin_id'))
-                    ->orderBy('id', 'desc')
-                    ->first();
+    // 2. Base popin query with rules applied
+    $popinQuery = function () use ($userRoleId, $activePlanAgentIds) {
+        return Popin::whereIn('for_whom', [$userRoleId, 'All'])
+            ->where(function ($q) use ($activePlanAgentIds) {
+                
+                // Always show these
+                $q->whereIn('status', ['Most Liked', 'Reward'])
+                
+                // Show Active popins only if their agent has active plan
+                ->orWhere(function ($q2) use ($activePlanAgentIds) {
+                    $q2->where('status', 'Active')
+                       ->whereIn('agent_id', $activePlanAgentIds);
+                });
 
-                // If none found, reset to latest (loop back)
-                if (!$popin) {
-                    $popin = Popin::where(function ($q) {
-                            $q->where('status', 'Active')->orWhere('status', 'Most Liked');
-                        })
-                        ->whereIn('for_whom', [$userRoleId, 'All'])
-                        ->orderBy('id', 'desc')
-                        ->first();
-                }
-            } else {
-                // First time: show latest
-                $popin = Popin::where(function ($q) {
-                        $q->where('status', 'Active')->orWhere('status', 'Most Liked');
-                    })
-                    ->whereIn('for_whom', [$userRoleId, 'All'])
+            });
+    };
+
+    // 3. Apply 10-minute rule
+    if (!$previousTime || now()->greaterThanOrEqualTo($previousTime->addMinutes(10))) {
+
+        // If previous ID exists → show next older popin
+        if (session('previous_popin_id')) {
+
+            $popin = $popinQuery()
+                ->where('id', '<', session('previous_popin_id'))
+                ->orderBy('id', 'desc')
+                ->first();
+
+            // Loop back to latest if no older popin found
+            if (!$popin) {
+                $popin = $popinQuery()
                     ->orderBy('id', 'desc')
                     ->first();
             }
 
-            if ($popin) {
-                session([
-                    'previous_popin_id' => $popin->id,
-                    'previous_popin_time' => now(),
-                ]);
-                return view('popins', compact('popin'))->render();
-            }
+        } else {
+            // First time: show newest popin
+            $popin = $popinQuery()
+                ->orderBy('id', 'desc')
+                ->first();
         }
 
-        return response()->json(['html' => '']);
+        // If popin found, store session and return HTML
+        if ($popin) {
+            session([
+                'previous_popin_id' => $popin->id,
+                'previous_popin_time' => now(),
+            ]);
+
+            return view('popins', compact('popin'))->render();
+        }
     }
+
+    return response()->json(['html' => '']);
+}
 
 public function view_popin(Request $req)
 {

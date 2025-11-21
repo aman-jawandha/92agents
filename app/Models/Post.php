@@ -115,6 +115,11 @@ class Post extends Model
     {
         return $this->belongsTo(User::class, 'agents_user_id');
     }
+
+    public function user_details()
+    {
+        return $this->belongsTo(Userdetails::class, 'agents_user_id','details_id');
+    }
     
     /**
      * Get the user role that owns the post.

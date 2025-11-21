@@ -40,6 +40,7 @@ Route::controller(Front\HomeController::class)->group(function () {
     Route::get('/aboutus', 'aboutus');
     Route::get('/advertise', 'showadvertise');
     Route::get('/agent', 'agent');
+    Route::get('/agent/{type}', 'agent')->name('agents-type');
     Route::get('/sellers', 'sellers');
     Route::get('/buyers', 'buyers');
     Route::get('/contactus', 'contact');
