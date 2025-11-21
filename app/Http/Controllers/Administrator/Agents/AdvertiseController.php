@@ -140,49 +140,64 @@ class AdvertiseController extends Controller
     }
 
     public function store_advrtismnt(Request $request)
-    {
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = $file->getClientOriginalName();
-            $file->move(public_path('uploads/popin_images'), $filename);
-            $image = $filename;
-        } else {
-            $image = null;
-        }
-        $user = auth()->user();
-        $user_plan = DB::table('user_plans')
-            ->where('user_id', $user->id)
-            ->first();
-        $user_popins = Popin::where('agent_id', $user->id)
-            ->where('status', 'Active')
-            ->count();
-        $today = date('Y-m-d');
-        $has_valid_plan = $user_plan && $user_plan->start_date <= $today && $user_plan->end_date >= $today;
-        $under_limit = $has_valid_plan && $user_plan->no_of_popins > $user_popins;
-        Popin::create([
-            'for_whom' => $request->for_whom,
-            'title' => $request->title,
-            'heading' => $request->heading,
-            'description' => $request->description,
-            'url' => $request->url,
-            'bg_color' => $request->bg_color,
-            'btn_color' => $request->btn_color,
-            'design' => $request->design,
-            'status' => $request->status,
-            'image' => $image,
-            'agent_id' => $user->id,
-        ]);
-        if (!$under_limit) {
-            DB::table('agents_users')->where('id', $user->id)->decrement('points', 20);
-            DB::table('agent_points_history')->insert([
-                'agent_id' => $user->id,
-                'minus_points' => 20,
-                'points_for' => 'Created advertisement using points',
-            ]);
-        }
-
-        return redirect()->route('agent-advertisement')->with('success', 'Advertisement added successfully');
+{
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = $file->getClientOriginalName();
+        $file->move(public_path('uploads/popin_images'), $filename);
+        $image = $filename;
+    } else {
+        $image = null;
     }
+
+    $user = auth()->user();
+
+    $user_plan = DB::table('user_plans')
+        ->where('user_id', $user->id)
+        ->first();
+
+    $user_popins = Popin::where('agent_id', $user->id)
+        ->where('status', 'Active')
+        ->count();
+
+    $today = date('Y-m-d');
+
+    $has_valid_plan = $user_plan && $user_plan->start_date <= $today && $user_plan->end_date >= $today;
+
+    $under_limit = $has_valid_plan && $user_plan->no_of_popins > $user_popins;
+
+    // Determine type
+    $status = $under_limit ? 'Active' : 'Reward';
+
+    // Create popin
+    Popin::create([
+        'for_whom' => $request->for_whom,
+        'title' => $request->title,
+        'heading' => $request->heading,
+        'description' => $request->description,
+        'url' => $request->url,
+        'bg_color' => $request->bg_color,
+        'btn_color' => $request->btn_color,
+        'design' => $request->design,
+        'status' => $status,
+        'image' => $image,
+        'agent_id' => $user->id,
+    ]);
+
+    // Deduct points only if NOT under plan
+    if (!$under_limit) {
+        DB::table('agents_users')->where('id', $user->id)->decrement('points', 20);
+
+        DB::table('agent_points_history')->insert([
+            'agent_id' => $user->id,
+            'minus_points' => 20,
+            'points_for' => 'Created advertisement using points',
+        ]);
+    }
+
+    return redirect()->route('agent-advertisement')
+        ->with('success', 'Advertisement added successfully');
+}
 
     public function edit_advrtismnt($id){
         $popin = Popin::where('id',$id)->first();

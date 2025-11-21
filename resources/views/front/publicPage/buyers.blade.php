@@ -52,6 +52,36 @@
     <div class="wrapper">
         <section id="home_made">
             <div class="container">
+                @if ($posts->count())
+                <h3 class="text-center" style="margin:0px 0px 50px 0px">Our Best Deals For You</h3>
+                <div class="row">
+                    @foreach ($posts as $post)
+                        <div class="col-md-3" style="margin-bottom:20px">
+                            <div class="card"
+                                style="background-color: white;border:1px solid green;border-radius:10px;padding:20px;min-height:240px">
+                                @if($post->when_do_you_want_to_buy == 'Now')
+                                <h6><span class="badge">Urgent Buy</span></h6>
+                                @endif
+                                <div style="display:flex;align-items:center;justify-content:space-between">
+                                    <h5 style="font-size: 16px;margin-bottom:0px">{{ $post->posttitle ?? 'N\A' }}</h5>
+                                </div><br>
+                                <h6 style="margin-bottom: 0px">Home Type : {{ $post->home_type ?? 'N\A'}}</h6>
+                                <h6 style="margin-bottom: 0px">Price Range : {{ $post->price_range ?? 'N\A'}}</h6>
+                                <h6 style="margin-bottom: 0px">Posted By : {{ $post->user_details->name ?? 'N\A'}}</h6>
+                                <h6 style="margin-bottom: 0px">Post Date :
+                                    {{ date('m-d-Y H:i a', strtotime($post->created_at)) }}</h6>
+                                <div class="text-center" style="margin-top:25px">
+                                    <a href="{{ url('login') }}" style="color:green;width:100%;font-size:14px">View Post >></a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="text-center" style="margin-top: 50px;margin-bottom: 50px">
+                    {{ $posts->links() }}
+                </div>
+            @endif
                 <div class="row flex_row_col_center">
                     <div class="col-md-6">
                         <h2>“Here’s How 92agents Will Help You Find Your Dream

@@ -59,6 +59,7 @@
                 </div>
             </div>
             <div class="rating_card">
+                @if($conversation || $applied_posts || $selldetails)
                 <div class="row md-margin-bottom-10">
                     <div class="col-md-8">
                         <form action="{{ route('store-agent-rating') }}" method="POST" enctype="multipart/form-data">
@@ -100,6 +101,7 @@
                             @endif
                     </div>
                 </div>
+                @endif
                 <div class="row">
                     <h1 style="margin:20px 0px 10px 5px">Ratings & Reviews</h1>
                     @if ($ratings->count() > 0)

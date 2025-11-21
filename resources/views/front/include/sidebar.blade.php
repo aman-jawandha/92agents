@@ -123,7 +123,7 @@
                     </li>
 
                     <li>
-                        <a {{ @$topmenu=='Agents' ? "id=current" : '' }} href="{{ URL('/agent') }}" class="sf-with-ul">
+                        <a {{ @$topmenu=='Agents' ? "id=current" : '' }} href="{{ route('agents-type','Sponsored') }}" class="sf-with-ul">
                             Agents<span class="sf-sub-indicator"></span>
                         </a>
                     </li>

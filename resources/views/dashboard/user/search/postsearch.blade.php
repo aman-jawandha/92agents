@@ -129,8 +129,8 @@
                             </form>
                         </div>
 
-                        <div>
-                            <div id="append-post-ajax"></div>
+                        <div style="background-color: #f9f9f9fc">
+                            <div class="row" id="append-post-ajax"></div>
 
                             <div id="loaderpost" class="col-md-12 center loder loaderpost">
                                 <img src="{{ url('/assets/img/loder/loading.gif') }}" width="64px" height="64px" />
@@ -401,8 +401,9 @@
                         var date = timeDifference(new Date(), new Date(Date.fromISO(value.created_at)));
                         var types = value.agents_users_role_id == 2 ? 'Buy' : 'Sell';
 
-                        var htmll = `<div class="border1-bottom" id="post_list_data_${value.post_id}">` +
-                            `<div class="funny-boxes acpost padding-bottom-5">` +
+                        var htmll = `<div class="col-md-4">
+                        <div style="padding-bottom:25px" id="post_list_data_${value.post_id}">` +
+                            `<div class="funny-boxes acpost" style="min-height:200px;border:1px solid green;border-radius:10px">` +
                             `<div style="display:flex;align-items:center;justify-content:space-between">
                             <div style="width:70%">
                             <h2 class="title line-height-5"><a href="/search/post/details/${value.post_id}">${value.posttitle}</a>${value.when_do_you_want_to_sell?.toLowerCase() == 'now' ? `<span class="badge badge-danger" style="margin: 10px;">Urgent ${types}</span>` : ''}</h2>
@@ -476,7 +477,8 @@
                                 `</ul>`;
                         }
 
-                        htmll += `</div>` + `</div>`;
+                        htmll += `</div>` + `</div>
+                        </div>`;
 
                         var msc = $(`#post_list_data_${value.post_id}`).find(`#append-post-ajax`);
                         var msct = msc.prevObject.length;
@@ -494,8 +496,9 @@
 
                     $.each(result.result, function(key, value) {
                         var date = timeDifference(new Date(), new Date(Date.fromISO(value.created_at)));
-                        var htmll = `<div class="border1-bottom" id="agents_list_data_${value.id}">` +
-                            `<div class="funny-boxes acpost" onclick="redarecturl('/search/buyer/details/${value.id}/${usertype}')">`;
+                        var htmll = `<div class="col-md-4">
+                        <div style="padding-bottom:25px" id="agents_list_data_${value.id}">` +
+                            `<div class="funny-boxes acpost" style="min-height:200px;border:1px solid green;border-radius:10px" onclick="redarecturl('/search/buyer/details/${value.id}/${usertype}')">`;
 
                         if (value.photo) {
                             htmll += `<img class="img-circle header-circle-img1 img-margin" width="80" height="80" src="{{ URL::asset('assets/img/profile/') }}/${value.photo}" alt="">`;
@@ -529,7 +532,8 @@
                             `<li><a class="cursor"><strong> Details </strong></a></li>` +
                             `</ul>` +
                             `</div>` +
-                            `</div>`;
+                            `</div>
+                            </div>`;
 
                         var msc = $(`#agents_list_data_${value.id}`).find('#append-post-ajax');
                         var msct = msc.prevObject.length;
@@ -545,8 +549,9 @@
                 if (searchtype == 'messages') {
                     $.each(result.result, function(key, value) {
                         var date = timeDifference(new Date(), new Date(Date.fromISO(value.created_at)));
-                        var htmll = '<div class="border1-bottom" id="agents_list_data_' + value.messages_id + '">' +
-                            '<div class="funny-boxes acpost" onclick="redarecturl(\'/messages/' + value.post_id + '/' + value.receiver_user_id + '/' + value.receiver_user_role_id + '\')">';
+                        var htmll = '<div class="col-md-4">' +
+                            '<div style="padding-bottom:25px" id="agents_list_data_' + value.messages_id + '">' +
+                            '<div class="funny-boxes acpost" style="min-height:200px;border:1px solid green;border-radius:10px" onclick="redarecturl(\'/messages/' + value.post_id + '/' + value.receiver_user_id + '/' + value.receiver_user_role_id + '\')">';
 
                         if (value.photo) {
                             htmll += '<img class="img-circle header-circle-img1 img-margin" width="80" height="80" src="{{ URL::asset('assets/img/profile/') }}/' + value.photo + '" alt="">';
@@ -568,7 +573,7 @@
                         }
 
 
-                        htmll += '</div>' + '</div>';
+                        htmll += '</div>' + '</div>' + '</div>';
 
                         var msc = $('#agents_list_data_' + value.messages_id).find('#append-post-ajax');
                         var msct = msc.prevObject.length;

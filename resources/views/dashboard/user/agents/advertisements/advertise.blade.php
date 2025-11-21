@@ -49,7 +49,7 @@
                             <a href="{{ route('advrtismnt-change-status',$popin->id) }}" onclick="return confirm('Are you sure you want to change status of this advertisement?')" class="btn btn-success btn-sm" style="color:white !important;">{{$popin->status}}</a>
                             @elseif($popin->status == "Inactive")
                             <a href="{{ route('advrtismnt-change-status', $popin->id) }}" onclick="return confirm('Are you sure you want to change status of this advertisement?')" class="btn btn-danger btn-sm" style="color:white !important;">{{$popin->status}}</a>
-                            @elseif($popin->status == "Most Liked")
+                            @elseif($popin->status == "Most Liked" || $popin->status == "Reward")
                             <button type="button" class="btn btn-warning btn-sm" style="color:white !important;">{{$popin->status}}</button>
                             @endif
                             <button type="button" onclick="viewPopin('{{$popin->id}}')" class="btn btn-success btn-sm" style="color:white !important;">View</button>
