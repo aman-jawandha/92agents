@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('payment_status')->nullable();
             $table->float('amount')->nullable();
             $table->string('payment_for')->nullable();
+            $table->string('plan_type')->nullable();
             $table->string('payment_by')->nullable();
             $table->integer('user_role')->nullable();
             $table->timestamp('created_at')->useCurrent();

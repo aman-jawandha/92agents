@@ -78,6 +78,7 @@ class AdvertiseController extends Controller
                 'payment_status' => $status,
                 'amount' => $amount,
                 'payment_for' => 'Plan - '.$plan->title,
+                'plan_type' => $plan->type,
                 'payment_by' => $user_name,
                 'user_role' => auth()->user()->agents_users_role_id,
             ]);
@@ -91,6 +92,7 @@ class AdvertiseController extends Controller
                 'payment_status' => $status,
                 'amount' => $amount,
                 'payment_for' => $plan->title,
+                'plan_type' => $plan->type,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
                 'duration' => $plan->duration,

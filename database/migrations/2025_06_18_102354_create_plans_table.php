@@ -21,7 +21,8 @@ return new class extends Migration
             $table->integer('duration')->comment('in months')->nullable();
             $table->text('designs')->nullable();
             $table->integer('no_of_popins')->comment('number of popins an agent can create')->nullable();
-            $table->string('status')->comment('Active,Inactive');
+            $table->string('status')->comment('Active,Inactive')->nullable();
+            $table->string('type')->comment('Pre-Paid,Recurring')->nullable();
             $table->timestamps();
         });
     }
