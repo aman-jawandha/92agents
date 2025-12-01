@@ -23,7 +23,6 @@ class PlanController extends Controller
             return redirect()->back()->with('error','Please select atleast one design!')->withInput();
         }
         $plan = Plan::create([
-            'owner_id' => auth()->user()->owner_id,
             'title' => $req->title,
             'description' => $req->description,
             'price' => $req->price,
@@ -31,6 +30,7 @@ class PlanController extends Controller
             'designs' => implode(',',$req->designs),
             'no_of_popins' => $req->no_of_popins,
             'status' => $req->status,
+            'type' => $req->type,
         ]);
         return redirect()->back()->with('success','Plan added successfully');
     }
@@ -52,6 +52,7 @@ class PlanController extends Controller
             'designs' => implode(',',$req->designs),
             'no_of_popins' => $req->no_of_popins,
             'status' => $req->status,
+            'type' => $req->type,
         ]);
         return redirect()->back()->with('success','Plan updated successfully');
     }

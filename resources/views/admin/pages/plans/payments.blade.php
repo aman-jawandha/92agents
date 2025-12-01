@@ -46,6 +46,7 @@
                                         <th>Payment Status</th>
                                         <th>Payment By</th>
                                         <th>Payment For</th>
+                                        <th>Plan Type</th>
                                         <th>Payment Date</th>
                                         <th>Action</th>
                                     </tr>
@@ -59,6 +60,7 @@
                                             <td>{{ $payment->payment_status}}</td>
                                             <td>{{ $payment->payment_by}}</td>
                                             <td>{{ $payment->payment_for}}</td>
+                                            <td>{{ $payment->plan_type}}</td>
                                             <td>{{ date('m-d-Y | H:i:s',strtotime($payment->created_at)) }}</td>
                                             <td>
                                                 <form id="delete-form" method="POST" style="display:none;">

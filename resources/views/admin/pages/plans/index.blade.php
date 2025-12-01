@@ -52,6 +52,7 @@
                                         <th>Provided Designs</th>
                                         <th>No. Of Popins</th>
                                         <th>Status</th>
+                                        <th>Type</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -67,6 +68,7 @@
                                             <td>
                                                 <span class="badge badge-success" style="background-color:{{($plan->status == 'Active') ? '#00a65a' : '#dd4b39'}}">{{ $plan->status }}</span>
                                             </td>
+                                            <td>{{ $plan->type}}</td>
                                             <td>
                                                 <a href="{{ route('edit-plan', $plan->id) }}"
                                                     class="btn btn-success btn-sm"><i class="fa fa-edit"></i></a>

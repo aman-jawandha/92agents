@@ -47,6 +47,7 @@
                             <tr>
                                 <th>Sr. No.</th>
                                 <th>Plan</th>
+                                <th>Plan Type</th>
                                 <th>Price</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
@@ -62,6 +63,7 @@
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $payment->payment_for }}</td>
+                                        <td>{{ $payment->plan_type }}</td>
                                         <td>${{ $payment->amount }}</td>
                                         <td style="min-width: 120px">{{ date('m-d-Y',strtotime($payment->start_date)) }}</td>
                                         <td style="min-width: 120px">{{ date('m-d-Y',strtotime($payment->end_date)) }}</td>
