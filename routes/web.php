@@ -234,6 +234,7 @@ Route::middleware(['auth', 'lang', 'sTime', 'check-user-activation'])->group(fun
         Route::get('/agent-advertisement-plans', 'agent_adds_plans')->name('agent-adds-plans');
         Route::post('/advertisement-payment-form', 'payment_form')->name('advertisement-payment-form');
         Route::get('/agent-stripe-payment', 'stripe_payment')->name('agent-stripe-payment');
+        Route::post('/agent-cancel-subscription', 'cancel_subscription')->name('agent-cancel-subscription');
         Route::get('/agent-add-advertisement', 'create_advrtismnt')->name('create-advrtismnt');
         Route::post('/store-advertisement', 'store_advrtismnt')->name('store-advrtismnt');
         Route::get('/agent-edit-advertisement/{id}', 'edit_advrtismnt')->name('edit-advrtismnt');
