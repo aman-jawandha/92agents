@@ -238,6 +238,9 @@
                                     <li class="{{ @$activemenu == 'Advertise' ? 'active' : '' }}"><a
                                             href="{{ route('agent-advertisement') }}">Advertise</a>
                                     </li>
+                                    <li class="{{ @$activemenu == 'Plans' ? 'active' : '' }}"><a
+                                            href="{{ route('agent-adds-plans') }}">Plans</a>
+                                    </li>
                                     <li class="{{ @$activemenu == 'Ratings' ? 'active' : '' }}"><a
                                             href="{{ route('get-agent-rating',auth()->user()->id) }}">Ratings</a>
                                     </li>
