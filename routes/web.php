@@ -39,8 +39,7 @@ Route::controller(Front\HomeController::class)->group(function () {
     Route::get('/incredible-content', 'incredibleContent');
     Route::get('/aboutus', 'aboutus');
     Route::get('/advertise', 'showadvertise');
-    Route::get('/agent', 'agent');
-    Route::get('/agent/{type}', 'agent')->name('agents-type');
+    Route::get('/agent', 'agent')->name('agents');
     Route::get('/sellers', 'sellers');
     Route::get('/buyers', 'buyers');
     Route::get('/contactus', 'contact');

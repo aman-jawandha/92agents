@@ -36,19 +36,13 @@
                             @endif
                             <form method="POST" action="{{ route('update-plan') }}" enctype="multipart/form-data">
                                 @csrf
-                                <div class="col-md-9">
+                                <div class="col-md-12">
                                     <label>Plan Title</label>
                                     <input type="hidden" name="plan_id" value="{{$plan->id}}">
                                     <input type="text" name="title" class="form-control" maxlength="50"
                                         placeholder="Eg. Golden Plan, Premium Plan" value="{{$plan->title ?? old('title')}}" required>
                                 </div>
-                                <div class="col-md-3">
-                                    <label>Type</label>
-                                    <select class="form-control" name="type" required disabled>
-                                        <option {{($plan->type == 'Pre-Paid') ? 'selected' : ''}} value="Pre-Paid">Pre-Paid</option>
-                                        <option {{($plan->type == 'Recurring') ? 'selected' : ''}} value="Recurring">Recurring</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" name="type" value="Recurring">
                                 <div class="col-md-12">
                                     <label>Description</label>
                                     <textarea class="form-control" maxlength="5000" name="description">{{$plan->description ?? old('description')}}</textarea>

@@ -26,6 +26,8 @@ class HomeController extends Controller
 {
     $user = new User;
     $view['stype'] = $stype;
+
+    // base user list
     $view['agents'] = $user->getforeUsersByAnyonly(0, [
         'agents_users.agents_users_role_id' => '4',
         'agents_users.is_deleted' => '0',
@@ -34,69 +36,76 @@ class HomeController extends Controller
 
     $today = now();
 
-    $topRatedIds = AgentRating::where('rating', 5)
+    // ---------- Recommended ----------
+    $recommendedIds = AgentRating::where('rating', 5)
         ->select('rating_for', DB::raw('COUNT(*) as five_star_count'))
         ->groupBy('rating_for')
         ->having('five_star_count', '>=', 20)
-        ->orderByDesc('five_star_count')
-        ->limit(10)
+        ->limit(50)
         ->pluck('rating_for')
         ->toArray();
 
-    $topRatedAgents = User::with('details')
-        ->whereIn('id', $topRatedIds)
-        ->get()
-        ->map(function ($agent) {
-            $agent->tag = 'Recommended';
-            return $agent;
-        });
+    // ---------- Sponsored ----------
+    $sponsoredIds = DB::table('user_plans')
+        ->where('start_date', '<=', $today)
+        ->where('end_date', '>=', $today)
+        ->pluck('user_id')
+        ->toArray();
 
-    $planAgents = User::with('details')
-        ->join('user_plans', 'user_plans.user_id', '=', 'agents_users.id')
-        ->where('user_plans.start_date', '<=', $today)
-        ->where('user_plans.end_date', '>=', $today)
-        ->select('agents_users.*')
-        ->distinct()
-        ->get()
-        ->map(function ($agent) {
-            $agent->tag = 'Sponsored';
-            return $agent;
-        });
+    // ---------- Contributors ----------
+    $contributorIds = DB::table('agents_blog')
+        ->whereMonth('created_date', now()->month)
+        ->whereYear('created_date', now()->year)
+        ->pluck('added_by')
+        ->toArray();
 
-    $contributorAgents = User::with('details')
-        ->join('agents_blog', 'agents_blog.added_by', '=', 'agents_users.id')
-        ->whereMonth('agents_blog.created_date', now()->month)
-        ->whereYear('agents_blog.created_date', now()->year)
-        ->select('agents_users.*')
-        ->distinct()
-        ->get()
-        ->map(function ($agent) {
-            $agent->tag = 'Contributor';
-            return $agent;
-        });
+    // ---------- Combine All IDs ----------
+    $allAgentIds = array_unique(
+        array_merge($recommendedIds, $sponsoredIds, $contributorIds)
+    );
 
-    $combinedAgents = $topRatedAgents
-        ->concat($planAgents)
-        ->concat($contributorAgents)
-        ->shuffle()
-        ->values();
+    // ---------- Fetch Agents ----------
+    $allAgents = User::with('details')
+        ->whereIn('id', $allAgentIds)
+        ->get();
+
+    // ---------- Assign Multiple Tags ----------
+    foreach ($allAgents as $agent) {
+        $tags = [];
+
+        if (in_array($agent->id, $recommendedIds)) {
+            $tags[] = "Recommended";
+        }
+        if (in_array($agent->id, $sponsoredIds)) {
+            $tags[] = "Sponsored";
+        }
+        if (in_array($agent->id, $contributorIds)) {
+            $tags[] = "Contributor";
+        }
+
+        $agent->setAttribute('tags', $tags);
+    }
+
+    // ---------- Shuffle & Paginate ----------
+    $allAgents = $allAgents->shuffle()->values();
 
     $page = request()->get('page', 1);
     $perPage = 8;
 
     $agents = new LengthAwarePaginator(
-        $combinedAgents->forPage($page, $perPage),
-        $combinedAgents->count(),
+        $allAgents->forPage($page, $perPage),
+        $allAgents->count(),
         $perPage,
         $page,
         ['path' => request()->url(), 'query' => request()->query()]
     );
 
+    // ---------- AJAX Handling ----------
     if (request()->ajax()) {
         return view('front.publicPage.featured_agents', compact('agents'))->render();
-    } else {
-        return view('front.publicPage.index', compact('view', 'agents'));
     }
+
+    return view('front.publicPage.index', compact('view', 'agents'));
 }
 
     public function blogs()
@@ -175,56 +184,62 @@ class HomeController extends Controller
     }
 
     /* For redirect agents  view */
-    public function agent($type='Recommended')
-    {
-        $today = now();
-        $allAgents = User::with('details')
-        ->where('agents_users_role_id', 4)
-        ->where('is_deleted', 0)
-        ->where('status', 1)
-        ->paginate(12);
-        if($type == 'Contributor'){
-             $agents = User::with('details')
-                ->join('agents_blog', 'agents_blog.added_by', '=', 'agents_users.id')
-                ->whereMonth('agents_blog.created_date', now()->month)
-                ->whereYear('agents_blog.created_date', now()->year)
-                ->select('agents_users.*')
-                ->distinct()
-                ->paginate(12);
-            foreach ($agents as $agent) {
-                $agent->tag = "Contributor";
-            }
-        }elseif($type == 'Sponsored'){
-            $agents = User::with('details')
-        ->join('user_plans', 'user_plans.user_id', '=', 'agents_users.id')
-        ->where('user_plans.start_date', '<=', $today)
-        ->where('user_plans.end_date', '>=', $today)
-        ->select('agents_users.*')
-        ->distinct()
-        ->paginate(12);
+    public function agent()
+{
+    $today = now();
 
-        foreach ($agents as $agent) {
-            $agent->tag = "Sponsored";
-        }
-        }elseif($type == 'Recommended'){
-            $topRatedIds = AgentRating::where('rating', 5)
+    // ---------- Recommended ----------
+    $recommendedIds = AgentRating::where('rating', 5)
         ->select('rating_for', DB::raw('COUNT(*) as five_star_count'))
         ->groupBy('rating_for')
         ->having('five_star_count', '>=', 20)
-        ->orderByDesc('five_star_count')
         ->pluck('rating_for')
         ->toArray();
 
-        $agents = User::with('details')
-            ->whereIn('id', $topRatedIds)
-            ->paginate(12);
+    // ---------- Sponsored ----------
+    $sponsoredIds = DB::table('user_plans')
+        ->where('start_date', '<=', $today)
+        ->where('end_date', '>=', $today)
+        ->pluck('user_id')
+        ->toArray();
 
-        foreach ($agents as $agent) {
-            $agent->tag = "Recommended";
-        }
-        } 
-        return view('front.publicPage.agents',compact('agents','type'));
+    // ---------- Contributors ----------
+    $contributorIds = DB::table('agents_blog')
+        ->whereMonth('created_date', now()->month)
+        ->whereYear('created_date', now()->year)
+        ->pluck('added_by')
+        ->toArray();
+
+
+    // ---------- Combine All IDs ----------
+    $allAgentIds = array_unique(array_merge($recommendedIds, $sponsoredIds, $contributorIds));
+
+    // ---------- Fetch Agents ----------
+    $agents = User::with('details')
+        ->whereIn('id', $allAgentIds)
+        ->paginate(12);
+
+    // ---------- Assign Multiple Tags ----------
+    foreach ($agents as $agent) {
+    $agent->setAttribute('tags', []);
+
+    $tags = [];
+
+    if (in_array($agent->id, $recommendedIds)) {
+        $tags[] = "Recommended";
     }
+    if (in_array($agent->id, $sponsoredIds)) {
+        $tags[] = "Sponsored";
+    }
+    if (in_array($agent->id, $contributorIds)) {
+        $tags[] = "Contributor";
+    }
+
+    $agent->setAttribute('tags', $tags);
+}
+
+    return view('front.publicPage.agents', compact('agents'));
+}
 
     /* For redirect contact view */
     public function contact(Request $request)

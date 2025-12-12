@@ -58,7 +58,7 @@
                     @foreach ($posts as $post)
                         <div class="col-md-3" style="margin-bottom:20px">
                             <div class="card"
-                                style="background-color: white;border:1px solid green;border-radius:10px;padding:20px;min-height:240px">
+                                style="background-color: white;border:1px solid green;border-radius:10px;padding:20px;min-height:300px">
                                 @if($post->when_do_you_want_to_buy == 'Now')
                                 <h6><span class="badge">Urgent Buy</span></h6>
                                 @endif
@@ -66,12 +66,13 @@
                                     <h5 style="font-size: 16px;margin-bottom:0px">{{ $post->posttitle ?? 'N\A' }}</h5>
                                 </div><br>
                                 <h6 style="margin-bottom: 0px">Home Type : {{ $post->home_type ?? 'N\A'}}</h6>
-                                <h6 style="margin-bottom: 0px">Price Range : {{ $post->price_range ?? 'N\A'}}</h6>
+                                <h6 style="margin-bottom: 0px">Home Zipcode : {{ $post->zip ?? 'N\A'}}</h6>
+                                <h6 style="margin-bottom: 0px">Urgency : {{ $post->when_do_you_want_to_sell ?? 'N\A'}}</h6>
                                 <h6 style="margin-bottom: 0px">Posted By : {{ $post->user_details->name ?? 'N\A'}}</h6>
-                                <h6 style="margin-bottom: 0px">Post Date :
+                                <h6 style="margin-bottom: 0px">Posted Date :
                                     {{ date('m-d-Y H:i a', strtotime($post->created_at)) }}</h6>
                                 <div class="text-center" style="margin-top:25px">
-                                    <a href="{{ url('login') }}" style="color:green;width:100%;font-size:14px">View Post >></a>
+                                    <a href="{{ url('login') }}" style="color:green;width:100%;font-size:14px">View Details >></a>
                                 </div>
                             </div>
                         </div>
