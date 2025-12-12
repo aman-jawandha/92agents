@@ -36,18 +36,12 @@
                             @endif
                             <form method="POST" action="{{ route('store-plan') }}" enctype="multipart/form-data">
                                 @csrf
-                                <div class="col-md-9">
+                                <div class="col-md-12">
                                     <label>Plan Title</label>
                                     <input type="text" name="title" class="form-control" maxlength="50"
                                         placeholder="Eg. Golden Plan, Premium Plan" value="{{old('title')}}" required>
                                 </div>
-                                <div class="col-md-3">
-                                    <label>Type</label>
-                                    <select class="form-control" name="type" required>
-                                        <option selected value="Pre-Paid">Pre-Paid</option>
-                                        <option value="Recurring">Recurring</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" name="type" value="Recurring">
                                 <div class="col-md-12">
                                     <label>Description</label>
                                     <textarea class="form-control" maxlength="5000" name="description">{{old('description')}}</textarea>

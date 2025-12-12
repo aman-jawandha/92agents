@@ -435,9 +435,12 @@
                                             </div>
                                         </div>`+
                             `<div class="funny-boxes-img">` +
-                            `<ul class="list-inline">` +
+                            `<ul>` +
+                            `<li><strong> Home Type : </strong> ${value.home_type} </li>` +
+                            `<li><strong> Home Zipcode : </strong> ${value.zip} </li>` +
+                            `<li><strong> Urgency : </strong> ${value.when_do_you_want_to_sell} </li>` +
                             `<li><strong> Posted By : </strong> ${value.name}<sub class="${value.login_status} mini"> ${value.login_status} </sub>  </li>  ` +
-                            `<li><strong> Posted : </strong> ${date} </li>` +
+                            `<li><strong> Posted Date: </strong> ${date} </li>` +
                             `</ul>` +
                             `</div>`;
 
