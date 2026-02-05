@@ -91,7 +91,7 @@
                             @if ($agent->details_id != auth()->id())
                                 <label style="width: 100%">Add Review</label>
                                 <textarea name="review" class="form-control" rows="7" maxlength="1000" placeholder="Write Something">{{ $rating->review ?? '' }}</textarea>
-                                <button type="submit" class="btn-u margin-top-10">Save</button>
+                                <button type="submit" class="btn-u margin-top-10">{{($rating) ? 'Update' : 'Save'}}</button>
                                 @if ($rating)
                                     <a href="{{ route('delete-agent-rating', $agent->details_id) }}" class="btn-u"
                                         onclick="return confirm('Are you sure you want to delete rating for this agent?')">
